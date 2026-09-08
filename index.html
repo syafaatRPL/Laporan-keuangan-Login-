@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -558,7 +557,7 @@
             try {
                 await signOut(auth);
                 if (reason) alert(reason);
-                window.location.href = 'Login/login.html';
+                window.location.href = 'Login/index.html';
             } catch (err) {
                 console.error("Gagal Logout: ", err);
             }
@@ -584,8 +583,8 @@
         // Cek Status Login Pengguna Realtime
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                // Pengguna belum login, tendang ke login.html
-                window.location.href = 'Login/login.html';
+                // Pengguna belum login, tendang ke Login/index.html
+                window.location.href = 'Login/index.html';
             } else {
                 // Pengguna terverifikasi login, aktifkan proteksi inactivity timer & muat data
                 startInactivityTracker();
