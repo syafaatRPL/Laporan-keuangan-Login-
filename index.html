@@ -1,1 +1,1034 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Input - Kasfaimid</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #0d9488;
+            --accent-hover: #0f766e;
+            --accent-glow: rgba(13, 148, 136, 0.25);
+            --bg-body: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --border-hover: #cbd5e1;
+            --success: #059669;
+            --danger: #dc2626;
+            --warning: #d97706;
+            --shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background-attachment: fixed;
+            color: var(--text-main);
+            padding: 28px 24px;
+            max-width: 1440px;
+            margin: 0 auto;
+            min-height: 100vh;
+        }
+
+        /* Header Styling */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            padding: 18px 24px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .header-title h1 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        /* Button Custom Styling */
+        .btn {
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--accent) 0%, #0f766e 100%); 
+            color: #fff; 
+        }
+        .btn-primary:hover { 
+            background: linear-gradient(135deg, #0d9488 0%, #115e59 100%);
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .btn-warning { 
+            background-color: #fef3c7; 
+            color: #b45309; 
+            border: 1px solid #fde68a;
+        }
+        .btn-warning:hover { 
+            background-color: #fde68a; 
+            color: #92400e;
+        }
+
+        .btn-outline { 
+            background-color: #ffffff; 
+            border: 1px solid var(--border-color); 
+            color: var(--text-main); 
+        }
+        .btn-outline:hover { 
+            background-color: #f8fafc; 
+            border-color: var(--border-hover);
+            color: var(--primary);
+        }
+
+        .btn-danger { 
+            background-color: #fee2e2; 
+            color: var(--danger); 
+            border: 1px solid #fecaca;
+        }
+        .btn-danger:hover { 
+            background-color: #fca5a5; 
+            color: #991b1b;
+        }
+
+        /* Layout Grid */
+        .layout-grid {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+        }
+
+        /* Card Component */
+        .card {
+            background-color: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: var(--border-hover);
+        }
+
+        .card-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 12px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 0;
+        }
+
+        .card-title i {
+            color: var(--accent);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.825rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            letter-spacing: 0.01em;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            outline: none;
+            background-color: #f8fafc;
+            color: var(--text-main);
+            transition: all 0.2s ease-in-out;
+        }
+
+        .form-control:hover {
+            border-color: var(--border-hover);
+            background-color: #ffffff;
+        }
+
+        .form-control:focus {
+            border-color: var(--accent);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        /* Table Styles */
+        .desktop-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .desktop-table th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 12px 14px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .desktop-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 0.85rem;
+            transition: background-color 0.15s ease;
+            vertical-align: middle;
+        }
+
+        .desktop-table tbody tr:not([style*="background-color"]):hover td {
+            background-color: #f8fafc;
+        }
+
+        /* Subtext pada tabel */
+        .table-subtext {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+            line-height: 1.4;
+        }
+
+        /* Badges */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.725rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
+        }
+
+        .badge-success { 
+            background-color: #d1fae5; 
+            color: #065f46; 
+            border: 1px solid #a7f3d0;
+        }
+        
+        .badge-danger { 
+            background-color: #fee2e2; 
+            color: #991b1b; 
+            border: 1px solid #fecaca;
+        }
+        
+        .badge-warning { 
+            background-color: #fef3c7; 
+            color: #92400e; 
+            border: 1px solid #fde68a;
+        }
+
+        .badge-secondary {
+            background-color: #f1f5f9;
+            color: #475569;
+            border: 1px solid #cbd5e1;
+        }
+
+        .action-btns {
+            display: flex;
+            gap: 6px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 32px !important;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Alert Toast Styling */
+        .alert {
+            padding: 14px 18px;
+            border-radius: var(--radius);
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: none;
+            box-shadow: var(--shadow-sm);
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .alert-success { 
+            background-color: #ecfdf5; 
+            color: #047857; 
+            border: 1px solid #a7f3d0; 
+        }
+        
+        .alert-danger { 
+            background-color: #fef2f2; 
+            color: #b91c1c; 
+            border: 1px solid #fecaca; 
+        }
+
+        @media (max-width: 1024px) {
+            .layout-grid {
+                grid-template-columns: 1fr;
+            }
+            body {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-title">
+            <h1>Admin Panel - Input Transaksi</h1>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">Tambah, Edit & Kelola Transaksi Database</p>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="index.html" class="btn btn-outline"><i class="fa-solid fa-chart-line"></i> Lihat Dashboard</a>
+            <button id="btnLogout" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+        </div>
+    </header>
+
+    <div id="alertBox" class="alert"></div>
+
+    <div class="layout-grid">
+        <!-- FORM INPUT / EDIT -->
+        <section class="card">
+            <h2 class="card-title" id="formTitle" style="margin-bottom: 20px;"><i class="fa-solid fa-plus-circle"></i> Tambah Transaksi</h2>
+            <form id="transactionForm">
+                <!-- Hidden Input untuk menyimpan ID Dokumen saat mode Edit -->
+                <input type="hidden" id="documentId">
+
+                <div class="form-group">
+                    <label for="companySelect">Nama PT / Perusahaan</label>
+                    <select id="companySelect" class="form-control" required>
+                        <option value="" disabled selected>-- Pilih PT / Perusahaan --</option>
+                        <option value="NEW_PT">+ Tambah PT Baru...</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="newCompanyGroup" style="display: none;">
+                    <label for="newCompanyName">Nama PT Baru</label>
+                    <input type="text" id="newCompanyName" class="form-control" placeholder="Contoh: PT. Sumber Makmur Jaya">
+                </div>
+
+                <div class="form-group">
+                    <label for="code">Kode Transaksi <span style="font-weight: normal; color: var(--text-muted);">(Opsional)</span></label>
+                    <input type="text" id="code" class="form-control" placeholder="">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="type">Jenis Transaksi</label>
+                        <select id="type" class="form-control" required>
+                            <option value="debit">Debit (+)</option>
+                            <option value="kredit">Kredit (-)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" class="form-control" required>
+                            <option value="Selesai">Selesai</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Batal">Batal</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Jumlah (Rp)</label>
+                    <input type="text" id="amount" class="form-control" placeholder="Jumlah..." required>
+                </div>
+
+                <div class="form-group">
+                    <label for="paymentMethod">Metode Pembayaran</label>
+                    <select id="paymentMethod" class="form-control" required>
+                        <option value="" disabled selected>-- Pilih Metode Pembayaran --</option>
+                        <option value="Transfer BCA">Transfer BCA</option>
+                        <option value="Transfer Mandiri">Transfer Mandiri</option>
+                        <option value="Transfer BRI">Transfer BRI</option>
+                        <option value="Transfer BNI">Transfer BNI</option>
+                        <option value="Cash / Tunai">Cash / Tunai</option>
+                        <option value="QRIS">QRIS</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="senderAccount">Rekening Pengirim <span style="font-weight: normal; color: var(--text-muted);">(Opsional)</span></label>
+                        <input type="text" id="senderAccount" class="form-control" placeholder="Nama & Rek...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipientAccount">Rekening Penerima <span style="font-weight: normal; color: var(--text-muted);">(Opsional)</span></label>
+                        <input type="text" id="recipientAccount" class="form-control" placeholder="Nama & Rek...">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Kategori <span style="font-weight: normal; color: var(--text-muted);">(Opsional)</span></label>
+                    <input type="text" id="category" class="form-control" placeholder="Kategori transaksi...">
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Tanggal</label>
+                    <input type="date" id="date" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Keterangan / Deskripsi <span style="font-weight: normal; color: var(--text-muted);">(Opsional)</span></label>
+                    <textarea id="description" class="form-control" rows="3" placeholder="Deskripsi ringkas transaksi..."></textarea>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" id="btnSubmit" class="btn btn-primary" style="flex: 1; justify-content: center;">
+                        <i class="fa-solid fa-paper-plane"></i> Simpan Transaksi
+                    </button>
+                    <button type="button" id="btnCancelEdit" class="btn btn-outline" style="display: none;">
+                        Batal
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- DAFTAR TRANSAKSI REALTIME -->
+        <section class="card" style="overflow-x: auto;">
+            <div class="card-header-flex">
+                <h2 class="card-title"><i class="fa-solid fa-list"></i> Data Transaksi Realtime</h2>
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <label for="tableFilter" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);"><i class="fa-solid fa-filter"></i> Filter:</label>
+                    <select id="tableFilter" class="form-control" style="width: auto; padding: 6px 12px; font-size: 0.85rem;">
+                        <option value="newest">Terbaru</option>
+                        <option value="oldest">Terlama</option>
+                        <option value="amount_desc">Terbesar</option>
+                        <option value="amount_asc">Terkecil</option>
+                        <option value="debit_only">Semua Debit (Pemasukan)</option>
+                        <option value="kredit_only">Semua Kredit (Pengeluaran)</option>
+                    </select>
+                </div>
+            </div>
+            <table class="desktop-table">
+                <thead>
+                    <tr>
+                        <th>Kode & Tanggal</th>
+                        <th>Keterangan & Info</th>
+                        <th>Jenis</th>
+                        <th>Status</th>
+                        <th>Metode</th>
+                        <th>Jumlah</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="transactionTableBody">
+                    <tr><td colspan="7" class="empty-state">Memuat data...</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <!-- INTEGRASI DATABASE SCRIPT -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged, 
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            updateDoc,
+            deleteDoc, 
+            doc, 
+            onSnapshot, 
+            query, 
+            orderBy,
+            Timestamp 
+        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+        // Konfigurasi Database
+        const firebaseConfig = {
+            apiKey: "AIzaSyDun1SSeSjVe8ztFl8P_TzBXhfUYk1K7FM",
+            authDomain: "laporan-19814.firebaseapp.com",
+            projectId: "laporan-19814",
+            storageBucket: "laporan-19814.firebasestorage.app",
+            messagingSenderId: "420276873621",
+            appId: "1:420276873621:web:5f0daeb7d99961218fee9c"
+        };
+
+        // Inisialisasi Database & Auth
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // --- SISTEM PROTEKSI LOGIN & AUTO LOGOUT ---
+        const INACTIVITY_LIMIT = 5 * 60 * 1000; // 5 Menit dalam milidetik
+        let inactivityTimer;
+
+        // Fungsi Logout
+        async function handleLogout(reason = '') {
+            try {
+                await signOut(auth);
+                if (reason) alert(reason);
+                window.location.href = 'login.html';
+            } catch (err) {
+                console.error("Gagal Logout: ", err);
+            }
+        }
+
+        // Reset Inactivity Timer
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                handleLogout('Sesi Anda telah berakhir karena tidak ada aktivitas selama 5 menit.');
+            }, INACTIVITY_LIMIT);
+        }
+
+        // Jalankan event listener aktivitas pengguna untuk reset timer
+        function startInactivityTracker() {
+            const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
+            events.forEach(event => {
+                window.addEventListener(event, resetInactivityTimer, true);
+            });
+            resetInactivityTimer();
+        }
+
+        // Cek Status Login Pengguna Realtime
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Pengguna belum login, tendang ke login.html
+                window.location.href = 'login.html';
+            } else {
+                // Pengguna terverifikasi login, aktifkan proteksi inactivity timer & muat data
+                startInactivityTracker();
+                loadTransactions();
+            }
+        });
+
+        // Event Tombol Logout
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            if (confirm('Apakah Anda yakin ingin keluar?')) {
+                handleLogout();
+            }
+        });
+
+        // --- MANAJEMEN TRANSAKSI & TABEL ---
+        
+        // Cache lokal data transaksi
+        let transactionsMap = new Map();
+        let currentSnapshotData = [];
+
+        // Auto Fill Tanggal Hari Ini
+        document.getElementById('date').valueAsDate = new Date();
+
+        // Elements
+        const companySelect = document.getElementById('companySelect');
+        const newCompanyGroup = document.getElementById('newCompanyGroup');
+        const newCompanyNameInput = document.getElementById('newCompanyName');
+        const amountInput = document.getElementById('amount');
+        const tableFilter = document.getElementById('tableFilter');
+
+        // Event Listener Filter & Urutan Tabel
+        tableFilter.addEventListener('change', () => {
+            renderTableData();
+        });
+
+        // Event Formatting Otomatis Angka Ribuan dengan Titik
+        amountInput.addEventListener('input', (e) => {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val) {
+                e.target.value = parseInt(val, 10).toLocaleString('id-ID');
+            } else {
+                e.target.value = '';
+            }
+        });
+
+        // Toggle Form PT Baru & Re-render Tabel saat pilihan PT Berubah
+        companySelect.addEventListener('change', (e) => {
+            const selectedVal = e.target.value;
+            if (selectedVal === 'NEW_PT') {
+                newCompanyGroup.style.display = 'block';
+                newCompanyNameInput.setAttribute('required', 'true');
+            } else {
+                newCompanyGroup.style.display = 'none';
+                newCompanyNameInput.removeAttribute('required');
+                newCompanyNameInput.value = '';
+            }
+
+            // Panggil render ulang tabel agar memfilter transaksi berdasarkan PT yang dipilih
+            renderTableData();
+        });
+
+        // Alert Notifikasi
+        function showAlert(message, type = 'success') {
+            const alertBox = document.getElementById('alertBox');
+            alertBox.className = `alert alert-${type}`;
+            alertBox.innerText = message;
+            alertBox.style.display = 'block';
+            setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
+        }
+
+        // Format Rupiah
+        function formatRupiah(amount) {
+            return new Intl.NumberFormat('id-ID', {
+                style: 'currency',
+                currency: 'IDR',
+                maximumFractionDigits: 0
+            }).format(amount);
+        }
+
+        // Format Tanggal
+        function formatDate(dateObj) {
+            if (!dateObj) return '-';
+            let d = dateObj.seconds ? new Date(dateObj.seconds * 1000) : new Date(dateObj);
+            return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+
+        // Helper Konversi Tanggal ke Milidetik
+        function getTimeInMillis(dateObj) {
+            if (!dateObj) return 0;
+            return dateObj.seconds ? dateObj.seconds * 1000 : new Date(dateObj).getTime();
+        }
+
+        // Helper Cek apakah Transaksi adalah Debit
+        function checkIsDebit(trx) {
+            return trx.type === 'debit' || trx.type === 'masuk' || trx.type === 'in' || trx.type === 'pemasukan';
+        }
+
+        // Helper Badge Status
+        function getStatusBadge(status) {
+            const st = (status || 'Selesai').toLowerCase();
+            if (st === 'selesai') return '<span class="badge badge-success"><i class="fa-solid fa-check"></i> Selesai</span>';
+            if (st === 'pending') return '<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> Pending</span>';
+            if (st === 'batal') return '<span class="badge badge-danger"><i class="fa-solid fa-xmark"></i> Batal</span>';
+            return `<span class="badge badge-secondary">${status}</span>`;
+        }
+
+        // Reset Form ke Mode Tambah Data
+        function resetForm() {
+            document.getElementById('transactionForm').reset();
+            document.getElementById('documentId').value = '';
+            document.getElementById('date').valueAsDate = new Date();
+            document.getElementById('formTitle').innerHTML = '<i class="fa-solid fa-plus-circle"></i> Tambah Transaksi';
+            document.getElementById('btnSubmit').className = 'btn btn-primary';
+            document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-paper-plane"></i> Simpan Transaksi';
+            document.getElementById('btnCancelEdit').style.display = 'none';
+            newCompanyGroup.style.display = 'none';
+            newCompanyNameInput.removeAttribute('required');
+
+            // Render ulang tabel setelah reset form
+            renderTableData();
+        }
+
+        // Tombol Batal Edit
+        document.getElementById('btnCancelEdit').addEventListener('click', resetForm);
+
+        // Submit Form -> Tambah atau Update Data Ke Database
+        document.getElementById('transactionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnSubmit = document.getElementById('btnSubmit');
+            const docId = document.getElementById('documentId').value;
+            
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+
+            try {
+                // Tentukan nama PT dari pilihan dropdown atau input baru
+                let companyName = companySelect.value;
+                if (companyName === 'NEW_PT') {
+                    companyName = newCompanyNameInput.value.trim();
+                }
+
+                if (!companyName) {
+                    throw new Error("Silakan pilih atau isi Nama PT.");
+                }
+
+                const code = document.getElementById('code').value;
+                const type = document.getElementById('type').value;
+                const status = document.getElementById('status').value;
+                
+                // Ambil nilai angka murni dari input bercakram/ber-titik
+                const rawAmount = document.getElementById('amount').value.replace(/\./g, '');
+                const amount = parseFloat(rawAmount) || 0;
+
+                const paymentMethod = document.getElementById('paymentMethod').value;
+                const senderAccount = document.getElementById('senderAccount').value;
+                const recipientAccount = document.getElementById('recipientAccount').value;
+                const category = document.getElementById('category').value;
+                const dateVal = document.getElementById('date').value;
+                const description = document.getElementById('description').value;
+
+                // Konversi tanggal string ke Timestamp Database
+                const transactionDate = Timestamp.fromDate(new Date(dateVal));
+
+                const payload = {
+                    companyName: companyName,
+                    code: code,
+                    type: type,
+                    status: status,
+                    amount: amount,
+                    paymentMethod: paymentMethod,
+                    senderAccount: senderAccount,
+                    recipientAccount: recipientAccount,
+                    category: category,
+                    date: transactionDate,
+                    description: description
+                };
+
+                if (docId) {
+                    // MODE EDIT: Update Dokumen
+                    await updateDoc(doc(db, "transactions", docId), payload);
+                    showAlert('Data transaksi berhasil diperbarui!');
+                } else {
+                    // MODE TAMBAH: Tambah Dokumen Baru
+                    payload.createdAt = Timestamp.now();
+                    await addDoc(collection(db, "transactions"), payload);
+                    showAlert('Data transaksi berhasil disimpan!');
+                }
+
+                resetForm();
+            } catch (error) {
+                console.error("Gagal menyimpan data: ", error);
+                showAlert('Gagal menyimpan data: ' + error.message, 'danger');
+            } finally {
+                btnSubmit.disabled = false;
+            }
+        });
+
+        // Update Pilihan Opsi PT di Dropdown Form
+        function updateCompanyDropdowns(companies) {
+            const currentSelectedInForm = companySelect.value;
+
+            // Reset Options
+            companySelect.innerHTML = '<option value="" disabled selected>-- Pilih PT / Perusahaan --</option>';
+
+            companies.forEach(company => {
+                const opt = document.createElement('option');
+                opt.value = company;
+                opt.textContent = company;
+                companySelect.appendChild(opt);
+            });
+
+            // Opsi Tambah PT Baru
+            const newOpt = document.createElement('option');
+            newOpt.value = 'NEW_PT';
+            newOpt.textContent = '+ Tambah PT Baru...';
+            companySelect.appendChild(newOpt);
+
+            // Restore selection
+            if (companies.includes(currentSelectedInForm) || currentSelectedInForm === 'NEW_PT') {
+                companySelect.value = currentSelectedInForm;
+            }
+        }
+
+        // Render Data Tabel (Disaring Berdasarkan Pilihan PT & Filter Pengurutan)
+        function renderTableData() {
+            const tbody = document.getElementById('transactionTableBody');
+
+            if (currentSnapshotData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Belum ada data di database.</td></tr>`;
+                return;
+            }
+
+            const selectedCompany = companySelect.value;
+            const filterValue = tableFilter.value;
+
+            // 1. Filter data berdasarkan PT yang dipilih
+            let filteredData = [...currentSnapshotData];
+            if (selectedCompany && selectedCompany !== 'NEW_PT') {
+                filteredData = filteredData.filter(trx => trx.companyName === selectedCompany);
+            }
+
+            // 2. Filter berdasarkan Jenis (Debit / Kredit) jika dipilih
+            if (filterValue === 'debit_only') {
+                filteredData = filteredData.filter(trx => checkIsDebit(trx));
+            } else if (filterValue === 'kredit_only') {
+                filteredData = filteredData.filter(trx => !checkIsDebit(trx));
+            }
+
+            // 3. Sorting Data
+            filteredData.sort((a, b) => {
+                const timeA = getTimeInMillis(a.date);
+                const timeB = getTimeInMillis(b.date);
+                const amountA = a.amount || 0;
+                const amountB = b.amount || 0;
+
+                switch (filterValue) {
+                    case 'oldest':
+                        return timeA - timeB;
+                    case 'amount_desc':
+                        return amountB - amountA;
+                    case 'amount_asc':
+                        return amountA - amountB;
+                    case 'newest':
+                    case 'debit_only':
+                    case 'kredit_only':
+                    default:
+                        return timeB - timeA;
+                }
+            });
+
+            if (filteredData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Tidak ada transaksi ditemukan untuk kriteria ini.</td></tr>`;
+                return;
+            }
+
+            // Grouping transaksi berdasarkan PT
+            const groupedTransactions = {};
+            filteredData.forEach((trx) => {
+                const company = (trx.companyName && trx.companyName.trim() !== '') ? trx.companyName.trim() : 'Tanpa Nama PT';
+
+                if (!groupedTransactions[company]) {
+                    groupedTransactions[company] = [];
+                }
+                groupedTransactions[company].push(trx);
+            });
+
+            const companyKeys = Object.keys(groupedTransactions).sort();
+
+            tbody.innerHTML = '';
+
+            // Render Tabel berdasarkan Kelompok PT
+            companyKeys.forEach((companyName) => {
+                // Header Perusahaan
+                const companyHeaderRow = document.createElement('tr');
+                companyHeaderRow.innerHTML = `
+                    <td colspan="7" style="background-color: #f1f5f9; font-weight: 700; color: #1e293b; padding: 10px 14px;">
+                        <i class="fa-solid fa-building" style="margin-right: 8px; color: var(--accent);"></i>${companyName}
+                    </td>
+                `;
+                tbody.appendChild(companyHeaderRow);
+
+                // Baris Transaksi
+                groupedTransactions[companyName].forEach((trx) => {
+                    const isDebit = checkIsDebit(trx);
+
+                    // Menyiapkan rincian informasi opsional secara vertikal (sejajar kebawah)
+                    const sender = trx.senderAccount ? `<div class="table-subtext"><strong>Pengirim:</strong> ${trx.senderAccount}</div>` : '';
+                    const recipient = trx.recipientAccount ? `<div class="table-subtext"><strong>Penerima:</strong> ${trx.recipientAccount}</div>` : '';
+                    const accountsInfo = `${sender}${recipient}`;
+
+                    const categoryBadge = trx.category ? `<span style="display:inline-block; margin-top:2px; font-size:0.7rem; background:#e2e8f0; color:#334155; padding:1px 6px; border-radius:4px;"><i class="fa-solid fa-tag"></i> ${trx.category}</span>` : '';
+                    
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <strong>#${trx.code || trx.id.substring(0, 6).toUpperCase()}</strong>
+                            <div class="table-subtext"><i class="fa-regular fa-calendar"></i> ${formatDate(trx.date)}</div>
+                        </td>
+                        <td style="white-space: normal; min-width: 200px;">
+                            <div>${trx.description || '-'}</div>
+                            ${categoryBadge ? `<div>${categoryBadge}</div>` : ''}
+                            ${accountsInfo}
+                        </td>
+                        <td><span class="badge ${isDebit ? 'badge-success' : 'badge-danger'}">${isDebit ? 'Debit' : 'Kredit'}</span></td>
+                        <td>${getStatusBadge(trx.status)}</td>
+                        <td><small style="font-weight: 500;">${trx.paymentMethod || '-'}</small></td>
+                        <td><strong style="color: ${isDebit ? 'var(--success)' : 'var(--danger)'}">${formatRupiah(trx.amount || 0)}</strong></td>
+                        <td>
+                            <div class="action-btns">
+                                <button class="btn btn-warning btn-edit" data-id="${trx.id}" style="padding: 4px 8px; font-size: 0.75rem;" title="Edit">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </button>
+                                <button class="btn btn-danger btn-delete" data-id="${trx.id}" style="padding: 4px 8px; font-size: 0.75rem;" title="Hapus">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            });
+
+            // Event Listener Edit Data
+            document.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.getAttribute('data-id');
+                    const trx = transactionsMap.get(id);
+
+                    if (trx) {
+                        document.getElementById('documentId').value = id;
+                        
+                        const companyVal = trx.companyName || '';
+                        const companyOptions = Array.from(companySelect.options).map(o => o.value);
+                        if (companyOptions.includes(companyVal)) {
+                            companySelect.value = companyVal;
+                            newCompanyGroup.style.display = 'none';
+                        } else {
+                            companySelect.value = 'NEW_PT';
+                            newCompanyGroup.style.display = 'block';
+                            newCompanyNameInput.value = companyVal;
+                        }
+
+                        document.getElementById('code').value = trx.code || '';
+                        
+                        // Normalisasi Jenis Transaksi ke Debit / Kredit
+                        const isDebitType = checkIsDebit(trx);
+                        document.getElementById('type').value = isDebitType ? 'debit' : 'kredit';
+
+                        document.getElementById('status').value = trx.status || 'Selesai';
+                        
+                        // Format Angka ke Ribuan Ber-titik saat dimasukkan ke input edit
+                        const amtVal = trx.amount || 0;
+                        document.getElementById('amount').value = amtVal ? parseInt(amtVal, 10).toLocaleString('id-ID') : '';
+
+                        document.getElementById('paymentMethod').value = trx.paymentMethod || '';
+                        document.getElementById('senderAccount').value = trx.senderAccount || '';
+                        document.getElementById('recipientAccount').value = trx.recipientAccount || '';
+                        document.getElementById('category').value = trx.category || '';
+                        document.getElementById('description').value = trx.description || '';
+
+                        if (trx.date) {
+                            const dateObj = trx.date.seconds ? new Date(trx.date.seconds * 1000) : new Date(trx.date);
+                            document.getElementById('date').value = dateObj.toISOString().split('T')[0];
+                        }
+
+                        document.getElementById('formTitle').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Transaksi';
+                        document.getElementById('btnSubmit').className = 'btn btn-warning';
+                        document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Update Transaksi';
+                        document.getElementById('btnCancelEdit').style.display = 'inline-flex';
+
+                        // Render ulang tabel untuk mencocokkan filter PT transaksi yang di-edit
+                        renderTableData();
+
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            // Event Listener Hapus Data
+            document.querySelectorAll('.btn-delete').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const docId = e.currentTarget.getAttribute('data-id');
+                    if (confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
+                        try {
+                            await deleteDoc(doc(db, "transactions", docId));
+                            showAlert('Data berhasil dihapus!');
+                            if (document.getElementById('documentId').value === docId) {
+                                resetForm();
+                            }
+                        } catch (err) {
+                            showAlert('Gagal menghapus data: ' + err.message, 'danger');
+                        }
+                    }
+                });
+            });
+        }
+
+        // Read Realtime Data Transaksi
+        function loadTransactions() {
+            const q = query(collection(db, "transactions"), orderBy("date", "desc"));
+
+            onSnapshot(q, (snapshot) => {
+                transactionsMap.clear();
+                currentSnapshotData = [];
+                const companiesSet = new Set();
+
+                snapshot.forEach((docSnap) => {
+                    const trx = { id: docSnap.id, ...docSnap.data() };
+                    transactionsMap.set(docSnap.id, trx);
+                    currentSnapshotData.push(trx);
+
+                    if (trx.companyName && trx.companyName.trim() !== '') {
+                        companiesSet.add(trx.companyName.trim());
+                    }
+                });
+
+                // Update opsi-opsi PT di dropdown form
+                updateCompanyDropdowns(Array.from(companiesSet).sort());
+
+                // Render tabel
+                renderTableData();
+            });
+        }
+    </script>
+</body>
+</html>
