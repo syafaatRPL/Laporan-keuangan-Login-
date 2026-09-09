@@ -560,7 +560,7 @@
             try {
                 await signOut(auth);
                 if (reason) alert(reason);
-                window.location.href = 'Login/index.html';
+                window.location.href = 'https://admin.kasfaimid.my.id';
             } catch (err) {
                 console.error("Gagal Logout: ", err);
             }
@@ -587,7 +587,7 @@
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 // Pengguna belum login, tendang ke Login/index.html
-                window.location.href = 'Login/index.html';
+                window.location.href = 'https://admin.kasfaimid.my.id';
             } else {
                 // Pengguna terverifikasi login, aktifkan proteksi inactivity timer & muat data
                 startInactivityTracker();
