@@ -548,6 +548,18 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
+        const publicDashboardUrl = 'https://kasfaimid.my.id';
+        const loginPageUrl = 'https://kasfaimid.my.id/login.html';
+
+        function safeNavigate(targetUrl) {
+            if (!targetUrl) return;
+            const currentUrl = window.location.href.replace(/\/$/, '');
+            const nextUrl = targetUrl.replace(/\/$/, '');
+            if (currentUrl !== nextUrl) {
+                window.location.href = targetUrl;
+            }
+        }
+
         // --- SISTEM PROTEKSI LOGIN & AUTO LOGOUT ---
         const INACTIVITY_LIMIT = 5 * 60 * 1000; // 5 Menit dalam milidetik
         let inactivityTimer;
@@ -557,7 +569,7 @@
             try {
                 await signOut(auth);
                 if (reason) alert(reason);
-                window.location.href = 'https://admin.kasfaimid.my.id';
+                safeNavigate(loginPageUrl);
             } catch (err) {
                 console.error("Gagal Logout: ", err);
             }
@@ -583,8 +595,8 @@
         // Cek Status Login Pengguna Realtime
         onAuthStateChanged(auth, (user) => {
             if (!user) {
-                // Pengguna belum login, arahkan ke halaman admin live
-                window.location.href = 'https://admin.kasfaimid.my.id';
+                // Pengguna belum login, arahkan ke halaman login live
+                safeNavigate(loginPageUrl);
             } else {
                 // Pengguna terverifikasi login, aktifkan proteksi inactivity timer & muat data
                 startInactivityTracker();
