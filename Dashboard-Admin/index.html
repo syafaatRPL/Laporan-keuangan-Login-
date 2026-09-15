@@ -439,11 +439,18 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="categorySelect">Kategori</label>
+                    <select id="categorySelect" class="form-control">
+                        <option value="" disabled selected>-- Pilih Kategori --</option>
+                        <option value="NEW_CATEGORY">+ Tambah Kategori Baru...</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="newCategoryGroup" style="display: none;">
                     <div class="form-label-row">
-                        <label for="category">Kategori</label>
-                        <span class="optional-tag">Opsional</span>
+                        <label for="newCategoryName">Kategori Baru</label>
                     </div>
-                    <input type="text" id="category" class="form-control" placeholder="Contoh: Operasional, Gaji, ATK">
+                    <input type="text" id="newCategoryName" class="form-control" placeholder="Masukkan kategori baru">
                 </div>
 
                 <div class="form-row">
@@ -593,7 +600,7 @@
         const auth = getAuth(app);
 
         const publicDashboardUrl = 'https://kasfaimid.my.id';
-        const loginPageUrl = 'https://kasfaimid.my.id/login.html';
+        const loginPageUrl = 'https://admin.kasfaimid.my.id/';
 
         function safeNavigate(targetUrl) {
             if (!targetUrl) return;
@@ -605,7 +612,7 @@
         }
 
         // --- SISTEM PROTEKSI LOGIN & AUTO LOGOUT ---
-        const INACTIVITY_LIMIT = 5 * 60 * 1000; // 5 Menit dalam milidetik
+        const INACTIVITY_LIMIT = 60 * 60 * 1000; // 5 Menit dalam milidetik
         let inactivityTimer;
 
         // Fungsi Logout
@@ -668,6 +675,9 @@
         const companySelect = document.getElementById('companySelect');
         const newCompanyGroup = document.getElementById('newCompanyGroup');
         const newCompanyNameInput = document.getElementById('newCompanyName');
+        const categorySelect = document.getElementById('categorySelect');
+        const newCategoryGroup = document.getElementById('newCategoryGroup');
+        const newCategoryNameInput = document.getElementById('newCategoryName');
         const amountInput = document.getElementById('amount');
         const tableFilter = document.getElementById('tableFilter');
 
@@ -700,6 +710,18 @@
 
             // Panggil render ulang tabel agar memfilter transaksi berdasarkan PT yang dipilih
             renderTableData();
+        });
+
+        categorySelect.addEventListener('change', (e) => {
+            const selectedVal = e.target.value;
+            if (selectedVal === 'NEW_CATEGORY') {
+                newCategoryGroup.style.display = 'block';
+                newCategoryNameInput.setAttribute('required', 'true');
+            } else {
+                newCategoryGroup.style.display = 'none';
+                newCategoryNameInput.removeAttribute('required');
+                newCategoryNameInput.value = '';
+            }
         });
 
         // Alert Notifikasi
@@ -758,6 +780,9 @@
             document.getElementById('btnCancelEdit').style.display = 'none';
             newCompanyGroup.style.display = 'none';
             newCompanyNameInput.removeAttribute('required');
+            newCategoryGroup.style.display = 'none';
+            newCategoryNameInput.removeAttribute('required');
+            categorySelect.value = '';
 
             // Render ulang tabel setelah reset form
             renderTableData();
@@ -797,7 +822,10 @@
                 const paymentMethod = document.getElementById('paymentMethod').value;
                 const senderAccount = document.getElementById('senderAccount').value;
                 const recipientAccount = document.getElementById('recipientAccount').value;
-                const category = document.getElementById('category').value;
+                let category = categorySelect.value;
+                if (category === 'NEW_CATEGORY') {
+                    category = newCategoryNameInput.value.trim();
+                }
                 const dateVal = document.getElementById('date').value;
                 const description = document.getElementById('description').value;
 
@@ -861,6 +889,42 @@
             // Restore selection
             if (companies.includes(currentSelectedInForm) || currentSelectedInForm === 'NEW_PT') {
                 companySelect.value = currentSelectedInForm;
+            }
+        }
+
+        function updateCategoryDropdowns(categories) {
+            const currentSelectedInForm = categorySelect.value;
+            const defaultCategories = [
+                'Saldo Awal',
+                'Hutang Usaha',
+                'Utang Bank',
+                'Kas Bank',
+                'Piutang Usaha',
+                'Perlengkapan',
+                'Peralatan',
+                'Modal Di Setor',
+                'Prive',
+                'Laba Rugi',
+                'Laba Untung'
+            ];
+            const uniqueCategories = [...new Set([...defaultCategories, ...categories])];
+
+            categorySelect.innerHTML = '<option value="" disabled selected>-- Pilih Kategori --</option>';
+
+            uniqueCategories.forEach(category => {
+                const opt = document.createElement('option');
+                opt.value = category;
+                opt.textContent = category;
+                categorySelect.appendChild(opt);
+            });
+
+            const newOpt = document.createElement('option');
+            newOpt.value = 'NEW_CATEGORY';
+            newOpt.textContent = '+ Tambah Kategori Baru...';
+            categorySelect.appendChild(newOpt);
+
+            if (uniqueCategories.includes(currentSelectedInForm) || currentSelectedInForm === 'NEW_CATEGORY') {
+                categorySelect.value = currentSelectedInForm;
             }
         }
 
@@ -954,10 +1018,13 @@
                     const categoryBadge = trx.category ? `<span style="display:inline-block; margin-top:2px; font-size:0.7rem; background:#e2e8f0; color:#334155; padding:1px 6px; border-radius:4px;"><i class="fa-solid fa-tag"></i> ${trx.category}</span>` : '';
                     
                     const transactionCode = (trx.code && String(trx.code).trim()) ? String(trx.code).trim() : '';
+                    const transactionCodeCell = transactionCode
+                        ? `<strong>#${transactionCode}</strong>`
+                        : '<span style="color: var(--text-muted);">-</span>';
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>
-                            <strong>${transactionCode ? '#' + transactionCode : ''}</strong>
+                            ${transactionCodeCell}
                             <div class="table-subtext"><i class="fa-regular fa-calendar"></i> ${formatDate(trx.date)}</div>
                         </td>
                         <td style="white-space: normal; min-width: 200px;">
@@ -1019,7 +1086,20 @@
                         document.getElementById('paymentMethod').value = trx.paymentMethod || '';
                         document.getElementById('senderAccount').value = trx.senderAccount || '';
                         document.getElementById('recipientAccount').value = trx.recipientAccount || '';
-                        document.getElementById('category').value = trx.category || '';
+                        const categoryValue = trx.category || '';
+                        const categoryOptions = Array.from(categorySelect.options).map(o => o.value);
+                        if (categoryOptions.includes(categoryValue)) {
+                            categorySelect.value = categoryValue;
+                            newCategoryGroup.style.display = 'none';
+                        } else if (categoryValue) {
+                            categorySelect.value = 'NEW_CATEGORY';
+                            newCategoryGroup.style.display = 'block';
+                            newCategoryNameInput.value = categoryValue;
+                        } else {
+                            categorySelect.value = '';
+                            newCategoryGroup.style.display = 'none';
+                            newCategoryNameInput.value = '';
+                        }
                         document.getElementById('description').value = trx.description || '';
 
                         if (trx.date) {
@@ -1067,6 +1147,7 @@
                 transactionsMap.clear();
                 currentSnapshotData = [];
                 const companiesSet = new Set();
+                const categoriesSet = new Set();
 
                 snapshot.forEach((docSnap) => {
                     const trx = { id: docSnap.id, ...docSnap.data() };
@@ -1076,10 +1157,14 @@
                     if (trx.companyName && trx.companyName.trim() !== '') {
                         companiesSet.add(trx.companyName.trim());
                     }
+                    if (trx.category && trx.category.trim() !== '') {
+                        categoriesSet.add(trx.category.trim());
+                    }
                 });
 
                 // Update opsi-opsi PT di dropdown form
                 updateCompanyDropdowns(Array.from(companiesSet).sort());
+                updateCategoryDropdowns(Array.from(categoriesSet).sort());
 
                 // Render tabel
                 renderTableData();
