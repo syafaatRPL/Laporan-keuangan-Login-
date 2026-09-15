@@ -188,36 +188,63 @@
             margin-bottom: 18px;
         }
 
+        .form-label-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
         .form-group label {
             display: block;
             font-size: 0.825rem;
-            font-weight: 600;
+            font-weight: 700;
             color: #334155;
-            margin-bottom: 6px;
             letter-spacing: 0.01em;
+        }
+
+        .optional-tag {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px 8px;
+            border-radius: 999px;
+            background: #f1f5f9;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 0.68rem;
+            font-weight: 600;
         }
 
         .form-control {
             width: 100%;
-            padding: 10px 14px;
+            min-height: 46px;
+            padding: 12px 14px;
             border: 1.5px solid var(--border-color);
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 0.875rem;
             outline: none;
-            background-color: #f8fafc;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
             color: var(--text-main);
             transition: all 0.2s ease-in-out;
+            box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.02);
         }
 
         .form-control:hover {
             border-color: var(--border-hover);
-            background-color: #ffffff;
+            background: #ffffff;
         }
 
         .form-control:focus {
             border-color: var(--accent);
-            background-color: #ffffff;
-            box-shadow: 0 0 0 3px var(--accent-glow);
+            background: #ffffff;
+            box-shadow: 0 0 0 3px var(--accent-glow), inset 0 1px 2px rgba(15, 23, 42, 0.02);
+        }
+
+        textarea.form-control {
+            min-height: 110px;
+            resize: vertical;
         }
 
         .form-row {
@@ -392,13 +419,18 @@
                 </div>
 
                 <div class="form-group" id="newCompanyGroup" style="display: none;">
-                    <label for="newCompanyName">Nama PT Baru</label>
-                    <input type="text" id="newCompanyName" class="form-control" placeholder="Contoh: PT. Sumber Makmur Jaya">
+                    <div class="form-label-row">
+                        <label for="newCompanyName">Nama PT Baru</label>
+                    </div>
+                    <input type="text" id="newCompanyName" class="form-control">
                 </div>
 
                 <div class="form-group">
-                    <label for="code">Kode Transaksi <span style="font-weight: normal; color: var(--text-muted);">(Opsional)</span></label>
-                    <input type="text" id="code" class="form-control" placeholder="">
+                    <div class="form-label-row">
+                        <label for="code">Kode Transaksi</label>
+                        <span class="optional-tag">Opsional</span>
+                    </div>
+                    <input type="text" id="code" class="form-control">
                 </div>
 
                 <div class="form-row">
@@ -422,7 +454,7 @@
 
                 <div class="form-group">
                     <label for="amount">Jumlah (Rp)</label>
-                    <input type="text" id="amount" class="form-control" placeholder="Jumlah..." required>
+                    <input type="text" id="amount" class="form-control" required>
                 </div>
 
                 <div class="form-group">
@@ -441,19 +473,28 @@
 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="senderAccount">Rekening Pengirim <span style="font-weight: normal; color: var(--text-muted);">(Opsional)</span></label>
-                        <input type="text" id="senderAccount" class="form-control" placeholder="Nama & Rek...">
+                        <div class="form-label-row">
+                            <label for="senderAccount">Rekening Pengirim</label>
+                            <span class="optional-tag">Opsional</span>
+                        </div>
+                        <input type="text" id="senderAccount" class="form-control">
                     </div>
 
                     <div class="form-group">
-                        <label for="recipientAccount">Rekening Penerima <span style="font-weight: normal; color: var(--text-muted);">(Opsional)</span></label>
-                        <input type="text" id="recipientAccount" class="form-control" placeholder="Nama & Rek...">
+                        <div class="form-label-row">
+                            <label for="recipientAccount">Rekening Penerima</label>
+                            <span class="optional-tag">Opsional</span>
+                        </div>
+                        <input type="text" id="recipientAccount" class="form-control">
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="category">Kategori <span style="font-weight: normal; color: var(--text-muted);">(Opsional)</span></label>
-                    <input type="text" id="category" class="form-control" placeholder="Kategori transaksi...">
+                    <div class="form-label-row">
+                        <label for="category">Kategori</label>
+                        <span class="optional-tag">Opsional</span>
+                    </div>
+                    <input type="text" id="category" class="form-control">
                 </div>
 
                 <div class="form-group">
@@ -462,8 +503,11 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="description">Keterangan / Deskripsi <span style="font-weight: normal; color: var(--text-muted);">(Opsional)</span></label>
-                    <textarea id="description" class="form-control" rows="3" placeholder="Deskripsi ringkas transaksi..."></textarea>
+                    <div class="form-label-row">
+                        <label for="description">Keterangan / Deskripsi</label>
+                        <span class="optional-tag">Opsional</span>
+                    </div>
+                    <textarea id="description" class="form-control" rows="3"></textarea>
                 </div>
 
                 <div class="button-group">
@@ -742,7 +786,7 @@
                     throw new Error("Silakan pilih atau isi Nama PT.");
                 }
 
-                const code = document.getElementById('code').value;
+                const code = document.getElementById('code').value.trim();
                 const type = document.getElementById('type').value;
                 const status = document.getElementById('status').value;
                 
@@ -909,10 +953,11 @@
 
                     const categoryBadge = trx.category ? `<span style="display:inline-block; margin-top:2px; font-size:0.7rem; background:#e2e8f0; color:#334155; padding:1px 6px; border-radius:4px;"><i class="fa-solid fa-tag"></i> ${trx.category}</span>` : '';
                     
+                    const transactionCode = (trx.code && String(trx.code).trim()) ? String(trx.code).trim() : '';
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>
-                            <strong>#${trx.code || trx.id.substring(0, 6).toUpperCase()}</strong>
+                            <strong>${transactionCode ? '#' + transactionCode : ''}</strong>
                             <div class="table-subtext"><i class="fa-regular fa-calendar"></i> ${formatDate(trx.date)}</div>
                         </td>
                         <td style="white-space: normal; min-width: 200px;">
