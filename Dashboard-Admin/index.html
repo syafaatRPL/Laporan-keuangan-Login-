@@ -422,7 +422,7 @@
                     <div class="form-label-row">
                         <label for="newCompanyName">Nama PT Baru</label>
                     </div>
-                    <input type="text" id="newCompanyName" class="form-control">
+                    <input type="text" id="newCompanyName" class="form-control" placeholder="Masukkan nama PT baru">
                 </div>
 
                 <div class="form-group">
@@ -430,7 +430,20 @@
                         <label for="code">Kode Transaksi</label>
                         <span class="optional-tag">Opsional</span>
                     </div>
-                    <input type="text" id="code" class="form-control">
+                    <input type="text" id="code" class="form-control" placeholder="Contoh: TRX-001">
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Tanggal</label>
+                    <input type="date" id="date" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label-row">
+                        <label for="category">Kategori</label>
+                        <span class="optional-tag">Opsional</span>
+                    </div>
+                    <input type="text" id="category" class="form-control" placeholder="Contoh: Operasional, Gaji, ATK">
                 </div>
 
                 <div class="form-row">
@@ -443,18 +456,18 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="status">Status</label>
-                        <select id="status" class="form-control" required>
-                            <option value="Selesai">Selesai</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Batal">Batal</option>
-                        </select>
+                        <label for="amount">Jumlah (Rp)</label>
+                        <input type="text" id="amount" class="form-control" placeholder="Masukkan nominal" required>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="amount">Jumlah (Rp)</label>
-                    <input type="text" id="amount" class="form-control" required>
+                    <label for="status">Status</label>
+                    <select id="status" class="form-control" required>
+                        <option value="Selesai">Selesai</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Batal">Batal</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -477,7 +490,7 @@
                             <label for="senderAccount">Rekening Pengirim</label>
                             <span class="optional-tag">Opsional</span>
                         </div>
-                        <input type="text" id="senderAccount" class="form-control">
+                        <input type="text" id="senderAccount" class="form-control" placeholder="Nama / rekening pengirim">
                     </div>
 
                     <div class="form-group">
@@ -485,21 +498,8 @@
                             <label for="recipientAccount">Rekening Penerima</label>
                             <span class="optional-tag">Opsional</span>
                         </div>
-                        <input type="text" id="recipientAccount" class="form-control">
+                        <input type="text" id="recipientAccount" class="form-control" placeholder="Nama / rekening penerima">
                     </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="form-label-row">
-                        <label for="category">Kategori</label>
-                        <span class="optional-tag">Opsional</span>
-                    </div>
-                    <input type="text" id="category" class="form-control">
-                </div>
-
-                <div class="form-group">
-                    <label for="date">Tanggal</label>
-                    <input type="date" id="date" class="form-control" required>
                 </div>
 
                 <div class="form-group">
@@ -507,7 +507,7 @@
                         <label for="description">Keterangan / Deskripsi</label>
                         <span class="optional-tag">Opsional</span>
                     </div>
-                    <textarea id="description" class="form-control" rows="3"></textarea>
+                    <textarea id="description" class="form-control" rows="3" placeholder="Tulis keterangan transaksi"></textarea>
                 </div>
 
                 <div class="button-group">
