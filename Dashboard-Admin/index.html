@@ -124,6 +124,12 @@
             <form id="transactionForm">
                 <div class="form-row">
                     <div class="field">
+                        <label for="transactionId">ID Transaksi</label>
+                        <input id="transactionId" name="transactionId" placeholder="Masukkan ID transaksi (opsional)">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="field">
                         <label for="companySelect">Nama PT / Perusahaan</label>
                         <div style="display:flex; gap:8px; align-items:center;">
                             <select id="companySelect" name="companySelect" required style="flex:1;"></select>
@@ -303,11 +309,12 @@
             mobileList.innerHTML = '';
 
             visibleTransactions.forEach(trx => {
+                const displayId = (trx.transactionId && String(trx.transactionId).trim()) ? `#${String(trx.transactionId).toUpperCase()}` : '';
                 const isIncome = isIncomeTransaction(trx);
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>#${(trx.id || '').toString().substring(0, 6).toUpperCase()}</td>
+                    <td>${displayId}</td>
                     <td>${trx.companyName || '-'}</td>
                     <td>${formatDate(trx.date)}</td>
                     <td>${trx.description || '-'}</td>
@@ -362,6 +369,7 @@
                     form.category.value = trx.category || '';
                     form.type.value = trx.type || 'debit';
                     form.amount.value = trx.amount || 0;
+                    if (form.transactionId) form.transactionId.value = trx.transactionId || '';
                     form.dataset.editingId = trx.id;
                     statusEl.innerText = 'Mode edit transaksi aktif. Klik Simpan untuk menyimpan perubahan.';
                     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -388,6 +396,7 @@
         function resetTransactionForm() {
             form.reset();
             form.dataset.editingId = '';
+            if (form.transactionId) form.transactionId.value = '';
             if (companySelect) {
                 companySelect.value = activeCompanyFilter || 'ALL';
             }
@@ -571,6 +580,7 @@
                 category: form.category.value.trim(),
                 type: form.type.value,
                 amount: cleanAmount,
+                transactionId: (form.transactionId && String(form.transactionId.value).trim()) || '',
                 status: 'Selesai',
                 updatedAt: serverTimestamp()
             };
