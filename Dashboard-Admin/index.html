@@ -15,7 +15,7 @@
             --primary-light: #1d4ed8;
             --accent: #f97316;
             --accent-hover: #ea580c;
-            --accent-glow: rgba(249, 115, 22, 0.18);
+            --accent-soft: rgba(249, 115, 22, 0.12);
             --blue-main: #2563eb;
             --blue-soft: rgba(37, 99, 235, 0.12);
             --bg-body: #f4f8ff;
@@ -25,130 +25,253 @@
             --border-color: #e2e8f0;
             --border-hover: #cbd5e1;
             --success: #10b981;
+            --success-soft: #ecfdf5;
             --danger: #ef4444;
+            --danger-soft: #fef2f2;
             --warning: #f59e0b;
-            --shadow-sm: 0 6px 18px rgba(37, 99, 235, 0.06);
+            --warning-soft: #fff7ed;
+            --shadow-sm: 0 8px 24px rgba(37, 99, 235, 0.06);
             --shadow-md: 0 10px 22px rgba(37, 99, 235, 0.08);
-            --shadow-lg: 0 14px 28px rgba(15, 23, 42, 0.08);
             --radius: 14px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        html, body { max-width: 100%; overflow-x: hidden; background: linear-gradient(180deg, #f7fafc 0%, #eef4f8 100%); color: var(--text-main); }
+        body { display: flex; min-height: 100vh; }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.28);
+            z-index: 99;
         }
 
-        body {
-            background: linear-gradient(180deg, #f8fbff 0%, #f4f8ff 100%);
-            background-attachment: fixed;
-            color: var(--text-main);
-            padding: 28px 24px;
-            max-width: 1440px;
-            margin: 0 auto;
-            min-height: 100vh;
+        .sidebar {
+            width: 260px;
+            background-color: var(--primary);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            transition: transform 0.3s ease;
         }
 
-        /* Header Styling */
+        .sidebar-brand {
+            padding: 24px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+            color: #fff;
+        }
+
+        .sidebar-brand-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .sidebar-brand i { color: #ffb067; }
+        .sidebar-close-btn { display: none; background: transparent; border: none; color: #cbd5e1; font-size: 1.2rem; cursor: pointer; }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 20px 10px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .sidebar-menu li { margin-bottom: 6px; }
+        .sidebar-menu a,
+        .sidebar-menu button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            color: #94a3b8;
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: var(--radius);
+            width: 100%;
+            background: transparent;
+            border: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-menu a:hover,
+        .sidebar-menu a.active,
+        .sidebar-menu button:hover,
+        .sidebar-menu button.active {
+            background: rgba(148, 163, 184, 0.14);
+            color: #fff;
+        }
+
+        .sidebar-menu a.active,
+        .sidebar-menu button.active {
+            border-left: 4px solid #e2e8f0;
+            padding-left: 12px;
+        }
+
+        .user-profile {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(148, 163, 184, 0.18);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fbbf24, #f97316);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .user-info h4 {
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .user-info p {
+            font-size: 0.75rem;
+            color: #94a3b8;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 24px;
+            width: calc(100% - 260px);
+            max-width: 100%;
+        }
+
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
+            gap: 15px;
             flex-wrap: wrap;
-            gap: 16px;
+            padding: 18px 20px;
+            border-radius: 18px;
             background: rgba(255, 255, 255, 0.96);
-            padding: 18px 24px;
-            border-radius: var(--radius);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-sm);
         }
 
-        .header-title h1 {
-            font-size: 1.5rem;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-toggle {
+            display: none;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            font-size: 1.1rem;
             color: var(--primary);
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
             font-weight: 700;
+            color: var(--primary);
             letter-spacing: -0.02em;
         }
 
-        /* Button Custom Styling */
+        .header-title p {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
         .btn {
-            padding: 10px 18px;
-            border-radius: 8px;
+            padding: 9px 14px;
+            border-radius: 12px;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             cursor: pointer;
             border: none;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            transition: all 0.2s ease;
             text-decoration: none;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow-sm);
+            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
         }
 
-        .btn:active {
-            transform: translateY(0);
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-light), var(--blue-main));
+            color: #fff;
+            border: 1px solid rgba(37, 99, 235, 0.28);
         }
 
-        .btn-primary { 
-            background: #e2e8f0; 
-            color: #0f172a; 
-            border: 1px solid #cbd5e1;
-        }
-        .btn-primary:hover { 
-            background: #cbd5e1;
-            box-shadow: 0 6px 14px rgba(15, 23, 42, 0.08);
+        .btn-warning {
+            background: linear-gradient(135deg, #fff7ed, #ffedd5);
+            color: #b45309;
+            border: 1px solid rgba(245, 158, 11, 0.2);
         }
 
-        .btn-warning { 
-            background: #e2e8f0; 
-            color: #0f172a; 
-            border: 1px solid #cbd5e1;
-        }
-        .btn-warning:hover { 
-            background: #cbd5e1; 
-            color: #0f172a;
+        .btn-outline {
+            background-color: #fff;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
         }
 
-        .btn-outline { 
-            background-color: #ffffff; 
-            border: 1px solid var(--border-color); 
-            color: var(--text-main); 
-        }
-        .btn-outline:hover { 
-            background: linear-gradient(135deg, rgba(249, 115, 22, 0.04), rgba(37, 99, 235, 0.04)); 
-            border-color: rgba(249, 115, 22, 0.3);
-            color: var(--primary);
+        .btn-outline:hover {
+            background-color: #f1f5f9;
         }
 
-        .btn-danger { 
-            background-color: #fee2e2; 
-            color: var(--danger); 
+        .btn-danger {
+            background-color: #fee2e2;
+            color: var(--danger);
             border: 1px solid #fecaca;
         }
-        .btn-danger:hover { 
-            background-color: #fca5a5; 
+
+        .btn-danger:hover {
+            background-color: #fca5a5;
             color: #991b1b;
         }
 
-        /* Layout Grid */
         .layout-grid {
             display: grid;
             grid-template-columns: 380px 1fr;
             gap: 24px;
         }
 
-        /* Card Component */
         .card {
             background-color: var(--bg-card);
-            border-radius: var(--radius);
+            border-radius: 18px;
             padding: 24px;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow-sm);
@@ -157,7 +280,7 @@
 
         .card:hover {
             box-shadow: var(--shadow-md);
-            border-color: rgba(249, 115, 22, 0.18);
+            border-color: rgba(37, 99, 235, 0.12);
         }
 
         .card-header-flex {
@@ -181,15 +304,9 @@
             margin-bottom: 0;
         }
 
-        .card-title i {
-            color: var(--accent);
-        }
+        .card-title i { color: var(--accent); }
 
-        /* Form Styles */
-        .form-group {
-            margin-bottom: 18px;
-        }
-
+        .form-group { margin-bottom: 18px; }
         .form-label-row {
             display: flex;
             align-items: center;
@@ -200,7 +317,7 @@
 
         .form-group label {
             display: block;
-            font-size: 0.825rem;
+            font-size: 0.82rem;
             font-weight: 700;
             color: #334155;
             letter-spacing: 0.01em;
@@ -233,21 +350,14 @@
             box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.02);
         }
 
-        .form-control:hover {
-            border-color: var(--border-hover);
-            background: #ffffff;
-        }
-
+        .form-control:hover { border-color: var(--border-hover); background: #ffffff; }
         .form-control:focus {
             border-color: var(--accent);
-            background: #ffffff;
+            background: #fff;
             box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12), inset 0 1px 2px rgba(15, 23, 42, 0.02);
         }
 
-        textarea.form-control {
-            min-height: 110px;
-            resize: vertical;
-        }
+        textarea.form-control { min-height: 110px; resize: vertical; }
 
         .form-row {
             display: grid;
@@ -261,19 +371,17 @@
             margin-top: 8px;
         }
 
-        /* Table Styles */
         .desktop-table {
             width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
+            border-collapse: collapse;
             text-align: left;
-            white-space: nowrap;
+            table-layout: fixed;
         }
 
         .desktop-table th {
             background-color: #f8fafc;
             color: var(--text-muted);
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -284,16 +392,14 @@
         .desktop-table td {
             padding: 12px 14px;
             border-bottom: 1px solid var(--border-color);
-            font-size: 0.85rem;
-            transition: background-color 0.15s ease;
+            font-size: 0.82rem;
             vertical-align: middle;
+            word-break: break-word;
+            overflow-wrap: anywhere;
         }
 
-        .desktop-table tbody tr:not([style*="background-color"]):hover td {
-            background-color: #f8fafc;
-        }
+        .desktop-table tbody tr:hover td { background-color: #f8fafc; }
 
-        /* Subtext pada tabel */
         .table-subtext {
             font-size: 0.75rem;
             color: var(--text-muted);
@@ -301,7 +407,6 @@
             line-height: 1.4;
         }
 
-        /* Badges */
         .badge {
             padding: 4px 10px;
             border-radius: 20px;
@@ -314,21 +419,21 @@
             letter-spacing: 0.02em;
         }
 
-        .badge-success { 
-            background-color: #ecfdf5; 
-            color: #047857; 
+        .badge-success {
+            background-color: #ecfdf5;
+            color: #047857;
             border: 1px solid #a7f3d0;
         }
-        
-        .badge-danger { 
-            background-color: #fef2f2; 
-            color: #b91c1c; 
+
+        .badge-danger {
+            background-color: #fef2f2;
+            color: #b91c1c;
             border: 1px solid #fecaca;
         }
-        
-        .badge-warning { 
-            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); 
-            color: #c2410c; 
+
+        .badge-warning {
+            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+            color: #c2410c;
             border: 1px solid #fed7aa;
         }
 
@@ -338,11 +443,7 @@
             border: 1px solid #cbd5e1;
         }
 
-        .action-btns {
-            display: flex;
-            gap: 6px;
-        }
-
+        .action-btns { display: flex; gap: 6px; }
         .empty-state {
             text-align: center;
             padding: 32px !important;
@@ -350,10 +451,9 @@
             font-style: italic;
         }
 
-        /* Alert Toast Styling */
         .alert {
             padding: 14px 18px;
-            border-radius: var(--radius);
+            border-radius: 14px;
             font-size: 0.875rem;
             font-weight: 500;
             margin-bottom: 20px;
@@ -367,203 +467,246 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .alert-success { 
-            background-color: #ecfdf5; 
-            color: #047857; 
-            border: 1px solid #a7f3d0; 
+        .alert-success {
+            background-color: #ecfdf5;
+            color: #047857;
+            border: 1px solid #a7f3d0;
         }
-        
-        .alert-danger { 
-            background-color: #fef2f2; 
-            color: #b91c1c; 
-            border: 1px solid #fecaca; 
+
+        .alert-danger {
+            background-color: #fef2f2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
         }
 
         @media (max-width: 1024px) {
-            .layout-grid {
-                grid-template-columns: 1fr;
-            }
-            body {
+            .layout-grid { grid-template-columns: 1fr; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.is-open { transform: translateX(0); }
+            .sidebar-overlay.is-visible { display: block; }
+            .main-content {
+                margin-left: 0;
+                width: 100%;
                 padding: 16px;
             }
+            .menu-toggle { display: inline-flex; }
+        }
+
+        @media (max-width: 640px) {
+            .header { padding: 16px 14px; }
+            .header-title h1 { font-size: 1.1rem; }
+            .form-row { grid-template-columns: 1fr; }
+            .desktop-table { table-layout: auto; }
+            .card { padding: 18px 14px; }
         }
     </style>
 </head>
 <body>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-    <header class="header">
-        <div class="header-title">
-            <h1>Admin Panel - Input Transaksi</h1>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">Tambah, Edit & Kelola Transaksi Database</p>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-title">
+                <i class="fa-solid fa-chart-line"></i>
+                <span>Laporan Keuangan</span>
+            </div>
+            <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Tutup sidebar">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <a href="https://kasfaimid.my.id" class="btn btn-outline"><i class="fa-solid fa-chart-line"></i> Lihat Dashboard</a>
-            <button id="btnLogout" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+
+        <ul class="sidebar-menu">
+            <li><a href="index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+            <li><a href="admin.html" class="active"><i class="fa-solid fa-user-shield"></i> Admin</a></li>
+        </ul>
+
+        <div class="user-profile">
+            <div class="user-avatar">A</div>
+            <div class="user-info">
+                <h4>Admin Panel</h4>
+                <p>Finance Control</p>
+            </div>
         </div>
-    </header>
+    </aside>
 
-    <div id="alertBox" class="alert"></div>
-
-    <div class="layout-grid">
-        <!-- FORM INPUT / EDIT -->
-        <section class="card">
-            <h2 class="card-title" id="formTitle" style="margin-bottom: 20px;"><i class="fa-solid fa-plus-circle"></i> Tambah Transaksi</h2>
-            <form id="transactionForm">
-                <!-- Hidden Input untuk menyimpan ID Dokumen saat mode Edit -->
-                <input type="hidden" id="documentId">
-
-                <div class="form-group">
-                    <label for="companySelect">Nama PT / Perusahaan</label>
-                    <select id="companySelect" class="form-control" required>
-                        <option value="" disabled selected>-- Pilih PT / Perusahaan --</option>
-                        <option value="NEW_PT">+ Tambah PT Baru...</option>
-                    </select>
+    <main class="main-content">
+        <header class="header">
+            <div class="header-left">
+                <button class="menu-toggle" id="menuToggle" aria-label="Buka menu"><i class="fa-solid fa-bars"></i></button>
+                <div class="header-title">
+                    <h1>Admin Panel - Input Transaksi</h1>
+                    <p>Tambah, Edit & Kelola Transaksi Database</p>
                 </div>
+            </div>
+            <div class="header-actions">
+                <a href="index.html" class="btn btn-outline"><i class="fa-solid fa-chart-line"></i> Lihat Dashboard</a>
+                <button id="btnLogout" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+            </div>
+        </header>
 
-                <div class="form-group" id="newCompanyGroup" style="display: none;">
-                    <div class="form-label-row">
-                        <label for="newCompanyName">Nama PT Baru</label>
-                    </div>
-                    <input type="text" id="newCompanyName" class="form-control" placeholder="Masukkan nama PT baru">
-                </div>
+        <div id="alertBox" class="alert"></div>
 
-                <div class="form-group">
-                    <div class="form-label-row">
-                        <label for="code">Kode Transaksi</label>
-                        <span class="optional-tag">Opsional</span>
-                    </div>
-                    <input type="text" id="code" class="form-control" placeholder="Contoh: TRX-001">
-                </div>
+        <div class="layout-grid">
+            <!-- FORM INPUT / EDIT -->
+            <section class="card">
+                <h2 class="card-title" id="formTitle" style="margin-bottom: 20px;"><i class="fa-solid fa-plus-circle"></i> Tambah Transaksi</h2>
+                <form id="transactionForm">
+                    <!-- Hidden Input untuk menyimpan ID Dokumen saat mode Edit -->
+                    <input type="hidden" id="documentId">
 
-                <div class="form-group">
-                    <label for="date">Tanggal</label>
-                    <input type="date" id="date" class="form-control" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="categorySelect">Kategori</label>
-                    <select id="categorySelect" class="form-control">
-                        <option value="" disabled selected>-- Pilih Kategori --</option>
-                        <option value="NEW_CATEGORY">+ Tambah Kategori Baru...</option>
-                    </select>
-                </div>
-
-                <div class="form-group" id="newCategoryGroup" style="display: none;">
-                    <div class="form-label-row">
-                        <label for="newCategoryName">Kategori Baru</label>
-                    </div>
-                    <input type="text" id="newCategoryName" class="form-control" placeholder="Masukkan kategori baru">
-                </div>
-
-                <div class="form-row">
                     <div class="form-group">
-                        <label for="type">Jenis Transaksi</label>
-                        <select id="type" class="form-control" required>
-                            <option value="debit">Debit (+)</option>
-                            <option value="kredit">Kredit (-)</option>
+                        <label for="companySelect">Nama PT / Perusahaan</label>
+                        <select id="companySelect" class="form-control" required>
+                            <option value="" disabled selected>-- Pilih PT / Perusahaan --</option>
+                            <option value="NEW_PT">+ Tambah PT Baru...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="newCompanyGroup" style="display: none;">
+                        <div class="form-label-row">
+                            <label for="newCompanyName">Nama PT Baru</label>
+                        </div>
+                        <input type="text" id="newCompanyName" class="form-control" placeholder="Masukkan nama PT baru">
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-label-row">
+                            <label for="code">Kode Transaksi</label>
+                            <span class="optional-tag">Opsional</span>
+                        </div>
+                        <input type="text" id="code" class="form-control" placeholder="Contoh: TRX-001">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Tanggal</label>
+                        <input type="date" id="date" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categorySelect">Kategori</label>
+                        <select id="categorySelect" class="form-control">
+                            <option value="" disabled selected>-- Pilih Kategori --</option>
+                            <option value="NEW_CATEGORY">+ Tambah Kategori Baru...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" id="newCategoryGroup" style="display: none;">
+                        <div class="form-label-row">
+                            <label for="newCategoryName">Kategori Baru</label>
+                        </div>
+                        <input type="text" id="newCategoryName" class="form-control" placeholder="Masukkan kategori baru">
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="type">Jenis Transaksi</label>
+                            <select id="type" class="form-control" required>
+                                <option value="debit">Debit (+)</option>
+                                <option value="kredit">Kredit (-)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="amount">Jumlah (Rp)</label>
+                            <input type="text" id="amount" class="form-control" placeholder="Masukkan nominal" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status</label>
+                        <select id="status" class="form-control" required>
+                            <option value="Selesai">Selesai</option>
+                            <option value="Pending">Pending</option>
+                            <option value="Batal">Batal</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label for="amount">Jumlah (Rp)</label>
-                        <input type="text" id="amount" class="form-control" placeholder="Masukkan nominal" required>
+                        <label for="paymentMethod">Metode Pembayaran</label>
+                        <select id="paymentMethod" class="form-control" required>
+                            <option value="" disabled selected>-- Pilih Metode Pembayaran --</option>
+                            <option value="Transfer BCA">Transfer BCA</option>
+                            <option value="Transfer Mandiri">Transfer Mandiri</option>
+                            <option value="Transfer BRI">Transfer BRI</option>
+                            <option value="Transfer BNI">Transfer BNI</option>
+                            <option value="Cash / Tunai">Cash / Tunai</option>
+                            <option value="QRIS">QRIS</option>
+                            <option value="Lainnya">Lainnya</option>
+                        </select>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="status">Status</label>
-                    <select id="status" class="form-control" required>
-                        <option value="Selesai">Selesai</option>
-                        <option value="Pending">Pending</option>
-                        <option value="Batal">Batal</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="paymentMethod">Metode Pembayaran</label>
-                    <select id="paymentMethod" class="form-control" required>
-                        <option value="" disabled selected>-- Pilih Metode Pembayaran --</option>
-                        <option value="Transfer BCA">Transfer BCA</option>
-                        <option value="Transfer Mandiri">Transfer Mandiri</option>
-                        <option value="Transfer BRI">Transfer BRI</option>
-                        <option value="Transfer BNI">Transfer BNI</option>
-                        <option value="Cash / Tunai">Cash / Tunai</option>
-                        <option value="QRIS">QRIS</option>
-                        <option value="Lainnya">Lainnya</option>
-                    </select>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <div class="form-label-row">
-                            <label for="senderAccount">Rekening Pengirim</label>
-                            <span class="optional-tag">Opsional</span>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <div class="form-label-row">
+                                <label for="senderAccount">Rekening Pengirim</label>
+                                <span class="optional-tag">Opsional</span>
+                            </div>
+                            <input type="text" id="senderAccount" class="form-control" placeholder="Nama / rekening pengirim">
                         </div>
-                        <input type="text" id="senderAccount" class="form-control" placeholder="Nama / rekening pengirim">
+
+                        <div class="form-group">
+                            <div class="form-label-row">
+                                <label for="recipientAccount">Rekening Penerima</label>
+                                <span class="optional-tag">Opsional</span>
+                            </div>
+                            <input type="text" id="recipientAccount" class="form-control" placeholder="Nama / rekening penerima">
+                        </div>
                     </div>
 
                     <div class="form-group">
                         <div class="form-label-row">
-                            <label for="recipientAccount">Rekening Penerima</label>
+                            <label for="description">Keterangan / Deskripsi</label>
                             <span class="optional-tag">Opsional</span>
                         </div>
-                        <input type="text" id="recipientAccount" class="form-control" placeholder="Nama / rekening penerima">
+                        <textarea id="description" class="form-control" rows="3" placeholder="Tulis keterangan transaksi"></textarea>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit" id="btnSubmit" class="btn btn-primary" style="flex: 1; justify-content: center;">
+                            <i class="fa-solid fa-paper-plane"></i> Simpan Transaksi
+                        </button>
+                        <button type="button" id="btnCancelEdit" class="btn btn-outline" style="display: none;">
+                            Batal
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- DAFTAR TRANSAKSI REALTIME -->
+            <section class="card" style="overflow-x: auto;">
+                <div class="card-header-flex">
+                    <h2 class="card-title"><i class="fa-solid fa-list"></i> Data Transaksi Realtime</h2>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <label for="tableFilter" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);"><i class="fa-solid fa-filter"></i> Filter:</label>
+                        <select id="tableFilter" class="form-control" style="width: auto; padding: 6px 12px; font-size: 0.85rem;">
+                            <option value="newest">Terbaru</option>
+                            <option value="oldest">Terlama</option>
+                            <option value="amount_desc">Terbesar</option>
+                            <option value="amount_asc">Terkecil</option>
+                            <option value="debit_only">Semua Debit (Pemasukan)</option>
+                            <option value="kredit_only">Semua Kredit (Pengeluaran)</option>
+                        </select>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <div class="form-label-row">
-                        <label for="description">Keterangan / Deskripsi</label>
-                        <span class="optional-tag">Opsional</span>
-                    </div>
-                    <textarea id="description" class="form-control" rows="3" placeholder="Tulis keterangan transaksi"></textarea>
-                </div>
-
-                <div class="button-group">
-                    <button type="submit" id="btnSubmit" class="btn btn-primary" style="flex: 1; justify-content: center;">
-                        <i class="fa-solid fa-paper-plane"></i> Simpan Transaksi
-                    </button>
-                    <button type="button" id="btnCancelEdit" class="btn btn-outline" style="display: none;">
-                        Batal
-                    </button>
-                </div>
-            </form>
-        </section>
-
-        <!-- DAFTAR TRANSAKSI REALTIME -->
-        <section class="card" style="overflow-x: auto;">
-            <div class="card-header-flex">
-                <h2 class="card-title"><i class="fa-solid fa-list"></i> Data Transaksi Realtime</h2>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <label for="tableFilter" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);"><i class="fa-solid fa-filter"></i> Filter:</label>
-                    <select id="tableFilter" class="form-control" style="width: auto; padding: 6px 12px; font-size: 0.85rem;">
-                        <option value="newest">Terbaru</option>
-                        <option value="oldest">Terlama</option>
-                        <option value="amount_desc">Terbesar</option>
-                        <option value="amount_asc">Terkecil</option>
-                        <option value="debit_only">Semua Debit (Pemasukan)</option>
-                        <option value="kredit_only">Semua Kredit (Pengeluaran)</option>
-                    </select>
-                </div>
-            </div>
-            <table class="desktop-table">
-                <thead>
-                    <tr>
-                        <th>Kode & Tanggal</th>
-                        <th>Keterangan & Info</th>
-                        <th>Jenis</th>
-                        <th>Status</th>
-                        <th>Metode</th>
-                        <th>Jumlah</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody id="transactionTableBody">
-                    <tr><td colspan="7" class="empty-state">Memuat data...</td></tr>
-                </tbody>
-            </table>
-        </section>
-    </div>
+                <table class="desktop-table">
+                    <thead>
+                        <tr>
+                            <th>Kode & Tanggal</th>
+                            <th>Keterangan & Info</th>
+                            <th>Jenis</th>
+                            <th>Status</th>
+                            <th>Metode</th>
+                            <th>Jumlah</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="transactionTableBody">
+                        <tr><td colspan="7" class="empty-state">Memuat data...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
 
     <!-- INTEGRASI DATABASE SCRIPT -->
     <script type="module">
