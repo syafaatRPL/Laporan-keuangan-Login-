@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Input - Kasfaimid</title>
-    <!-- Google Fonts -->
+    <title>Admin - Laporan Keuangan</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <style>
         :root {
             --primary: #0f172a;
@@ -23,713 +20,218 @@
             --text-main: #0f172a;
             --text-muted: #64748b;
             --border-color: #e2e8f0;
-            --border-hover: #cbd5e1;
-            --success: #10b981;
-            --success-soft: #ecfdf5;
-            --danger: #ef4444;
-            --danger-soft: #fef2f2;
-            --warning: #f59e0b;
-            --warning-soft: #fff7ed;
+            --surface-soft: #f8fbff;
             --shadow-sm: 0 8px 24px rgba(37, 99, 235, 0.06);
-            --shadow-md: 0 10px 22px rgba(37, 99, 235, 0.08);
             --radius: 14px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        * { margin:0; padding:0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         html, body { max-width: 100%; overflow-x: hidden; background: linear-gradient(180deg, #f7fafc 0%, #eef4f8 100%); color: var(--text-main); }
-        body { display: flex; min-height: 100vh; }
-
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.28);
-            z-index: 99;
-        }
+        body { display:flex; min-height:100vh; }
 
         .sidebar {
-            width: 260px;
-            background-color: var(--primary);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            height: 100vh;
-            left: 0;
-            top: 0;
-            z-index: 100;
-            transition: transform 0.3s ease;
+            width: 260px; background-color: var(--primary); color: #fff;
+            display: flex; flex-direction: column; position: fixed; height: 100vh;
+            left: 0; top: 0; z-index: 100; transition: transform 0.3s ease;
         }
-
         .sidebar-brand {
-            padding: 24px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-            color: #fff;
+            padding: 24px 20px; font-size: 1.25rem; font-weight: 700;
+            display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--primary-light); color: #fff;
         }
-
-        .sidebar-brand-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 1.1rem;
-            font-weight: 700;
-        }
-
+        .sidebar-brand-title { display: flex; align-items: center; gap: 12px; }
         .sidebar-brand i { color: #ffb067; }
-        .sidebar-close-btn { display: none; background: transparent; border: none; color: #cbd5e1; font-size: 1.2rem; cursor: pointer; }
-
-        .sidebar-menu {
-            list-style: none;
-            padding: 20px 10px;
-            flex: 1;
-            overflow-y: auto;
-        }
-
+        .sidebar-menu { list-style: none; padding: 20px 10px; flex: 1; overflow-y: auto; }
         .sidebar-menu li { margin-bottom: 6px; }
         .sidebar-menu a,
         .sidebar-menu button {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            color: #94a3b8;
-            text-decoration: none;
-            font-weight: 500;
-            border-radius: var(--radius);
-            width: 100%;
-            background: transparent;
-            border: none;
-            text-align: left;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s ease;
+            display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+            color: #94a3b8; text-decoration: none; font-weight: 500; border-radius: var(--radius); transition: all 0.2s;
+            width: 100%; background: transparent; border: none; text-align: left; cursor: pointer; font-size: 0.9rem;
         }
+        .sidebar-menu a:hover, .sidebar-menu a.active,
+        .sidebar-menu button:hover, .sidebar-menu button.active { background: rgba(148, 163, 184, 0.14); color: #fff; }
+        .sidebar-menu a.active, .sidebar-menu button.active { border-left: 4px solid #e2e8f0; }
+        .user-profile { padding: 16px 20px; border-top: 1px solid var(--primary-light); display: flex; align-items: center; gap: 12px; }
+        .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: transparent; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+        .user-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 50%; }
+        .user-info h4 { font-size: 0.9rem; color: #fff; }
+        .user-info p { font-size: 0.75rem; color: #94a3b8; }
 
-        .sidebar-menu a:hover,
-        .sidebar-menu a.active,
-        .sidebar-menu button:hover,
-        .sidebar-menu button.active {
-            background: rgba(148, 163, 184, 0.14);
-            color: #fff;
-        }
+        .main-content { margin-left:260px; flex:1; padding:24px; }
+        .card { background:#fff; border-radius:12px; padding:18px; border:1px solid #e2e8f0; box-shadow:0 8px 24px rgba(37,99,235,0.06); }
+        .desktop-table { width:100%; border-collapse:collapse; margin-top:12px; }
+        .desktop-table th { text-align:left; padding:8px 10px; background:#f8fafc; border-bottom:1px solid #e2e8f0; font-size:0.78rem; color:#334155; }
+        .desktop-table td { padding:10px 8px; border-bottom:1px solid #eaeef6; font-size:0.9rem; }
+        .mobile-trx-list { display:none; margin-top:12px; }
+        .form-row { display:flex; gap:12px; margin-bottom:12px; }
+        .form-row .field { flex:1; display:flex; flex-direction:column; }
+        label { font-size:0.85rem; color:#334155; margin-bottom:6px; font-weight:600; }
+        input, select, textarea { padding:10px 12px; border:1px solid #e2e8f0; border-radius:8px; outline:none; }
+        button.btn { background:#2563eb; color:#fff; border:none; padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:700; }
+        .small { font-size:0.82rem; color:#64748b; }
 
-        .sidebar-menu a.active,
-        .sidebar-menu button.active {
-            border-left: 4px solid #e2e8f0;
-            padding-left: 12px;
-        }
-
-        .user-profile {
-            padding: 16px 20px;
-            border-top: 1px solid rgba(148, 163, 184, 0.18);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #fbbf24, #f97316);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .user-info h4 {
-            font-size: 0.9rem;
-            color: #fff;
-        }
-
-        .user-info p {
-            font-size: 0.75rem;
-            color: #94a3b8;
-        }
-
-        .main-content {
-            margin-left: 260px;
-            flex: 1;
-            padding: 24px;
-            width: calc(100% - 260px);
-            max-width: 100%;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-            gap: 15px;
-            flex-wrap: wrap;
-            padding: 18px 20px;
-            border-radius: 18px;
-            background: rgba(255, 255, 255, 0.96);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .menu-toggle {
-            display: none;
-            background: #fff;
-            border: 1px solid var(--border-color);
-            padding: 8px 12px;
-            border-radius: var(--radius);
-            cursor: pointer;
-            font-size: 1.1rem;
-            color: var(--primary);
-        }
-
-        .header-title h1 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: var(--primary);
-            letter-spacing: -0.02em;
-        }
-
-        .header-title p {
-            font-size: 0.78rem;
-            color: var(--text-muted);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            padding: 9px 14px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            border: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-        }
-
-        .btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-light), var(--blue-main));
-            color: #fff;
-            border: 1px solid rgba(37, 99, 235, 0.28);
-        }
-
-        .btn-warning {
-            background: linear-gradient(135deg, #fff7ed, #ffedd5);
-            color: #b45309;
-            border: 1px solid rgba(245, 158, 11, 0.2);
-        }
-
-        .btn-outline {
-            background-color: #fff;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-        }
-
-        .btn-outline:hover {
-            background-color: #f1f5f9;
-        }
-
-        .btn-danger {
-            background-color: #fee2e2;
-            color: var(--danger);
-            border: 1px solid #fecaca;
-        }
-
-        .btn-danger:hover {
-            background-color: #fca5a5;
-            color: #991b1b;
-        }
-
-        .layout-grid {
-            display: grid;
-            grid-template-columns: 380px 1fr;
-            gap: 24px;
-        }
-
-        .card {
-            background-color: var(--bg-card);
-            border-radius: 18px;
-            padding: 24px;
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
-        }
-
-        .card:hover {
-            box-shadow: var(--shadow-md);
-            border-color: rgba(37, 99, 235, 0.12);
-        }
-
-        .card-header-flex {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 12px;
-            flex-wrap: wrap;
-            border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 12px;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 0;
-        }
-
-        .card-title i { color: var(--accent); }
-
-        .form-group { margin-bottom: 18px; }
-        .form-label-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-
-        .form-group label {
-            display: block;
-            font-size: 0.82rem;
-            font-weight: 700;
-            color: #334155;
-            letter-spacing: 0.01em;
-        }
-
-        .optional-tag {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 3px 8px;
-            border-radius: 999px;
-            background: #f1f5f9;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            font-size: 0.68rem;
-            font-weight: 600;
-        }
-
-        .form-control {
-            width: 100%;
-            min-height: 46px;
-            padding: 12px 14px;
-            border: 1.5px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 0.875rem;
-            outline: none;
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            color: var(--text-main);
-            transition: all 0.2s ease-in-out;
-            box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.02);
-        }
-
-        .form-control:hover { border-color: var(--border-hover); background: #ffffff; }
-        .form-control:focus {
-            border-color: var(--accent);
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.12), inset 0 1px 2px rgba(15, 23, 42, 0.02);
-        }
-
-        textarea.form-control { min-height: 110px; resize: vertical; }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 8px;
-        }
-
-        .desktop-table {
-            width: 100%;
-            border-collapse: collapse;
-            text-align: left;
-            table-layout: fixed;
-        }
-
-        .desktop-table th {
-            background-color: #f8fafc;
-            color: var(--text-muted);
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 12px 14px;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .desktop-table td {
-            padding: 12px 14px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 0.82rem;
-            vertical-align: middle;
-            word-break: break-word;
-            overflow-wrap: anywhere;
-        }
-
-        .desktop-table tbody tr:hover td { background-color: #f8fafc; }
-
-        .table-subtext {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            margin-top: 2px;
-            line-height: 1.4;
-        }
-
-        .badge {
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.725rem;
-            font-weight: 700;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-        }
-
-        .badge-success {
-            background-color: #ecfdf5;
-            color: #047857;
-            border: 1px solid #a7f3d0;
-        }
-
-        .badge-danger {
-            background-color: #fef2f2;
-            color: #b91c1c;
-            border: 1px solid #fecaca;
-        }
-
-        .badge-warning {
-            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
-            color: #c2410c;
-            border: 1px solid #fed7aa;
-        }
-
-        .badge-secondary {
-            background-color: #f1f5f9;
-            color: #475569;
-            border: 1px solid #cbd5e1;
-        }
-
-        .action-btns { display: flex; gap: 6px; }
-        .empty-state {
-            text-align: center;
-            padding: 32px !important;
-            color: var(--text-muted);
-            font-style: italic;
-        }
-
-        .alert {
-            padding: 14px 18px;
-            border-radius: 14px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            margin-bottom: 20px;
-            display: none;
-            box-shadow: var(--shadow-sm);
-            animation: fadeIn 0.3s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .alert-success {
-            background-color: #ecfdf5;
-            color: #047857;
-            border: 1px solid #a7f3d0;
-        }
-
-        .alert-danger {
-            background-color: #fef2f2;
-            color: #b91c1c;
-            border: 1px solid #fecaca;
-        }
-
-        @media (max-width: 1024px) {
-            .layout-grid { grid-template-columns: 1fr; }
+        @media (max-width:768px) {
+            .desktop-table { display:none; }
+            .mobile-trx-list { display:block; }
             .sidebar { transform: translateX(-100%); }
-            .sidebar.is-open { transform: translateX(0); }
-            .sidebar-overlay.is-visible { display: block; }
-            .main-content {
-                margin-left: 0;
-                width: 100%;
-                padding: 16px;
-            }
-            .menu-toggle { display: inline-flex; }
-        }
-
-        @media (max-width: 640px) {
-            .header { padding: 16px 14px; }
-            .header-title h1 { font-size: 1.1rem; }
-            .form-row { grid-template-columns: 1fr; }
-            .desktop-table { table-layout: auto; }
-            .card { padding: 18px 14px; }
         }
     </style>
 </head>
 <body>
-    <div class="sidebar-overlay" id="sidebarOverlay"></div>
-
-    <aside class="sidebar" id="sidebar">
+    <aside class="sidebar">
         <div class="sidebar-brand">
             <div class="sidebar-brand-title">
                 <i class="fa-solid fa-chart-line"></i>
                 <span>Laporan Keuangan</span>
             </div>
-            <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Tutup sidebar">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
         </div>
 
         <ul class="sidebar-menu">
             <li><a href="index.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
-            <li><a href="admin.html" class="active"><i class="fa-solid fa-user-shield"></i> Admin</a></li>
+            <li><a href="admin.html" class="active"><i class="fa-solid fa-user-gear"></i> Admin</a></li>
+            <li><a href="laporan-laba-rugi.html"><i class="fa-solid fa-chart-column"></i> Laba Rugi</a></li>
+            <li><a href="laporan-perubahan-ekuitas.html"><i class="fa-solid fa-scale-balanced"></i> Perubahan Ekuitas</a></li>
+            <li><a href="laporan-keuangan-neraca.html"><i class="fa-solid fa-balance-scale"></i> Neraca</a></li>
         </ul>
 
         <div class="user-profile">
-            <div class="user-avatar">A</div>
+            <div class="user-avatar">
+                <img src="https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=200&q=80" alt="Logo perusahaan">
+            </div>
             <div class="user-info">
-                <h4>Admin Panel</h4>
-                <p>Finance Control</p>
+                <h4>Berbagai Perusahaan</h4>
+                <p>laporan keuangan</p>
             </div>
         </div>
     </aside>
 
     <main class="main-content">
-        <header class="header">
-            <div class="header-left">
-                <button class="menu-toggle" id="menuToggle" aria-label="Buka menu"><i class="fa-solid fa-bars"></i></button>
-                <div class="header-title">
-                    <h1>Admin Panel - Input Transaksi</h1>
-                    <p>Tambah, Edit & Kelola Transaksi Database</p>
-                </div>
+        <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+            <div>
+                <h1>Admin Panel</h1>
+                <p class="small">Tambah atau sunting data transaksi</p>
             </div>
-            <div class="header-actions">
-                <a href="index.html" class="btn btn-outline"><i class="fa-solid fa-chart-line"></i> Lihat Dashboard</a>
-                <button id="btnLogout" class="btn btn-danger"><i class="fa-solid fa-right-from-bracket"></i> Log Out</button>
+            <div>
+                <button class="btn" onclick="window.location.href='index.html'">Kembali ke Dashboard</button>
             </div>
         </header>
 
-        <div id="alertBox" class="alert"></div>
-
-        <div class="layout-grid">
-            <!-- FORM INPUT / EDIT -->
-            <section class="card">
-                <h2 class="card-title" id="formTitle" style="margin-bottom: 20px;"><i class="fa-solid fa-plus-circle"></i> Tambah Transaksi</h2>
-                <form id="transactionForm">
-                    <!-- Hidden Input untuk menyimpan ID Dokumen saat mode Edit -->
-                    <input type="hidden" id="documentId">
-
-                    <div class="form-group">
+        <section class="card">
+            <h3>Form Input Transaksi</h3>
+            <form id="transactionForm">
+                <div class="form-row">
+                    <div class="field">
                         <label for="companySelect">Nama PT / Perusahaan</label>
-                        <select id="companySelect" class="form-control" required>
-                            <option value="" disabled selected>-- Pilih PT / Perusahaan --</option>
-                            <option value="NEW_PT">+ Tambah PT Baru...</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" id="newCompanyGroup" style="display: none;">
-                        <div class="form-label-row">
-                            <label for="newCompanyName">Nama PT Baru</label>
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <select id="companySelect" name="companySelect" required style="flex:1;"></select>
+                            <button type="button" id="manageCompaniesBtn" style="padding:8px 10px; border-radius:8px; border:1px solid #e2e8f0; background:#fff; cursor:pointer;">Kelola</button>
                         </div>
-                        <input type="text" id="newCompanyName" class="form-control" placeholder="Masukkan nama PT baru">
                     </div>
-
-                    <div class="form-group">
-                        <div class="form-label-row">
-                            <label for="code">Kode Transaksi</label>
-                            <span class="optional-tag">Opsional</span>
-                        </div>
-                        <input type="text" id="code" class="form-control" placeholder="Contoh: TRX-001">
-                    </div>
-
-                    <div class="form-group">
+                    <div class="field">
                         <label for="date">Tanggal</label>
-                        <input type="date" id="date" class="form-control" required>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="categorySelect">Kategori</label>
-                        <select id="categorySelect" class="form-control">
-                            <option value="" disabled selected>-- Pilih Kategori --</option>
-                            <option value="NEW_CATEGORY">+ Tambah Kategori Baru...</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" id="newCategoryGroup" style="display: none;">
-                        <div class="form-label-row">
-                            <label for="newCategoryName">Kategori Baru</label>
-                        </div>
-                        <input type="text" id="newCategoryName" class="form-control" placeholder="Masukkan kategori baru">
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="type">Jenis Transaksi</label>
-                            <select id="type" class="form-control" required>
-                                <option value="debit">Debit (+)</option>
-                                <option value="kredit">Kredit (-)</option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="amount">Jumlah (Rp)</label>
-                            <input type="text" id="amount" class="form-control" placeholder="Masukkan nominal" required>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="status">Status</label>
-                        <select id="status" class="form-control" required>
-                            <option value="Selesai">Selesai</option>
-                            <option value="Pending">Pending</option>
-                            <option value="Batal">Batal</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="paymentMethod">Metode Pembayaran</label>
-                        <select id="paymentMethod" class="form-control" required>
-                            <option value="" disabled selected>-- Pilih Metode Pembayaran --</option>
-                            <option value="Transfer BCA">Transfer BCA</option>
-                            <option value="Transfer Mandiri">Transfer Mandiri</option>
-                            <option value="Transfer BRI">Transfer BRI</option>
-                            <option value="Transfer BNI">Transfer BNI</option>
-                            <option value="Cash / Tunai">Cash / Tunai</option>
-                            <option value="QRIS">QRIS</option>
-                            <option value="Lainnya">Lainnya</option>
-                        </select>
-                    </div>
-
-                    <div class="form-row">
-                        <div class="form-group">
-                            <div class="form-label-row">
-                                <label for="senderAccount">Rekening Pengirim</label>
-                                <span class="optional-tag">Opsional</span>
-                            </div>
-                            <input type="text" id="senderAccount" class="form-control" placeholder="Nama / rekening pengirim">
-                        </div>
-
-                        <div class="form-group">
-                            <div class="form-label-row">
-                                <label for="recipientAccount">Rekening Penerima</label>
-                                <span class="optional-tag">Opsional</span>
-                            </div>
-                            <input type="text" id="recipientAccount" class="form-control" placeholder="Nama / rekening penerima">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="form-label-row">
-                            <label for="description">Keterangan / Deskripsi</label>
-                            <span class="optional-tag">Opsional</span>
-                        </div>
-                        <textarea id="description" class="form-control" rows="3" placeholder="Tulis keterangan transaksi"></textarea>
-                    </div>
-
-                    <div class="button-group">
-                        <button type="submit" id="btnSubmit" class="btn btn-primary" style="flex: 1; justify-content: center;">
-                            <i class="fa-solid fa-paper-plane"></i> Simpan Transaksi
-                        </button>
-                        <button type="button" id="btnCancelEdit" class="btn btn-outline" style="display: none;">
-                            Batal
-                        </button>
-                    </div>
-                </form>
-            </section>
-
-            <!-- DAFTAR TRANSAKSI REALTIME -->
-            <section class="card" style="overflow-x: auto;">
-                <div class="card-header-flex">
-                    <h2 class="card-title"><i class="fa-solid fa-list"></i> Data Transaksi Realtime</h2>
-                    <div style="display: flex; align-items: center; gap: 8px;">
-                        <label for="tableFilter" style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);"><i class="fa-solid fa-filter"></i> Filter:</label>
-                        <select id="tableFilter" class="form-control" style="width: auto; padding: 6px 12px; font-size: 0.85rem;">
-                            <option value="newest">Terbaru</option>
-                            <option value="oldest">Terlama</option>
-                            <option value="amount_desc">Terbesar</option>
-                            <option value="amount_asc">Terkecil</option>
-                            <option value="debit_only">Semua Debit (Pemasukan)</option>
-                            <option value="kredit_only">Semua Kredit (Pengeluaran)</option>
-                        </select>
+                        <input id="date" name="date" type="date" required>
                     </div>
                 </div>
-                <table class="desktop-table">
+
+                <div class="form-row">
+                    <div class="field">
+                        <label for="description">Keterangan</label>
+                        <input id="description" name="description" placeholder="Opsional">
+                    </div>
+                    <div class="field">
+                        <label for="category">Kategori</label>
+                        <input id="category" name="category">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="field">
+                        <label for="type">Jenis</label>
+                        <select id="type" name="type">
+                            <option value="debit">Pemasukan (debit)</option>
+                            <option value="kredit">Pengeluaran (kredit)</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="amount">Jumlah (IDR)</label>
+                        <input id="amount" name="amount" type="text" inputmode="numeric" min="0" required placeholder="Contoh: 1.000">
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top:12px;">
+                    <button type="submit" class="btn">Simpan Transaksi</button>
+                    <button type="button" id="resetBtn" style="background:#f1f5f9; color:#0f172a; border-radius:10px; padding:10px 14px; border:1px solid #e2e8f0;">Reset</button>
+                </div>
+            </form>
+        </section>
+
+        <section style="margin-top:14px;" class="card">
+            <h3>Preview / Bantuan</h3>
+            <p class="small">Form ini akan menyimpan data ke koleksi `transactions` pada Firebase (sama seperti `index.html`). Pastikan konfigurasi Firebase ada.</p>
+            <div id="status" class="small" style="margin-top:8px;color:#0f172a"></div>
+        </section>
+
+        <section style="margin-top:14px;" class="card">
+            <h3>Daftar Transaksi</h3>
+            <div>
+                <table class="desktop-table" aria-label="Daftar transaksi">
                     <thead>
                         <tr>
-                            <th>Kode & Tanggal</th>
-                            <th>Keterangan & Info</th>
+                            <th>ID</th>
+                            <th>PT</th>
+                            <th>Tanggal</th>
+                            <th>Keterangan</th>
+                            <th>Kategori</th>
                             <th>Jenis</th>
-                            <th>Status</th>
-                            <th>Metode</th>
                             <th>Jumlah</th>
-                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="transactionTableBody">
-                        <tr><td colspan="7" class="empty-state">Memuat data...</td></tr>
+                        <tr><td colspan="7" class="small">Memuat data...</td></tr>
                     </tbody>
                 </table>
-            </section>
+
+                <div class="mobile-trx-list" id="transactionMobileList">
+                    <div class="small">Memuat data...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal Kelola Perusahaan -->
+        <div id="companyModal" style="display:none; position:fixed; inset:0; align-items:center; justify-content:center; background:rgba(15,23,42,0.6); z-index:1200;">
+            <div style="width:min(720px,96%); background:#fff; border-radius:12px; padding:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h3>Kelola Perusahaan</h3>
+                    <button id="closeCompanyModal" style="background:#f1f5f9;border:1px solid #e2e8f0;padding:8px 10px;border-radius:8px;">Tutup</button>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-bottom:12px;">
+                    <input id="newCompanyName" placeholder="Nama perusahaan baru" style="flex:1; padding:8px 10px; border:1px solid #e2e8f0; border-radius:8px;">
+                    <button id="addCompanyBtn" class="btn">Tambah</button>
+                </div>
+
+                <div style="max-height:300px; overflow:auto; border-top:1px solid #eaeef6; padding-top:8px;">
+                    <table style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left; padding:8px 6px;">Nama</th>
+                                <th style="text-align:right; padding:8px 6px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="companiesList">
+                            <tr><td colspan="2" class="small">Memuat...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- INTEGRASI DATABASE SCRIPT -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged, 
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
-        import { 
-            getFirestore, 
-            collection, 
-            addDoc, 
-            updateDoc,
-            deleteDoc, 
-            doc, 
-            onSnapshot, 
-            query, 
-            orderBy,
-            Timestamp 
-        } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-        // Konfigurasi Database
         const firebaseConfig = {
             apiKey: "AIzaSyDun1SSeSjVe8ztFl8P_TzBXhfUYk1K7FM",
             authDomain: "laporan-19814.firebaseapp.com",
@@ -739,621 +241,362 @@
             appId: "1:420276873621:web:5f0daeb7d99961218fee9c"
         };
 
-        // Inisialisasi Database & Auth
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
+        const form = document.getElementById('transactionForm');
+        const statusEl = document.getElementById('status');
 
-        const publicDashboardUrl = 'https://kasfaimid.my.id';
-        const loginPageUrl = 'https://admin.kasfaimid.my.id/';
+        let app = null;
+        let db = null;
+        let allTransactions = [];
+        let activeCompanyFilter = 'ALL';
 
-        function safeNavigate(targetUrl) {
-            if (!targetUrl) return;
-            const currentUrl = window.location.href.replace(/\/$/, '');
-            const nextUrl = targetUrl.replace(/\/$/, '');
-            if (currentUrl !== nextUrl) {
-                window.location.href = targetUrl;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+        } catch (error) {
+            console.error('Firebase init failed:', error);
+            if (statusEl) {
+                statusEl.innerText = 'Firebase gagal diinisialisasi. Periksa konfigurasi proyek.';
             }
         }
 
-        // --- SISTEM PROTEKSI LOGIN & AUTO LOGOUT ---
-        const INACTIVITY_LIMIT = 60 * 60 * 1000; // 5 Menit dalam milidetik
-        let inactivityTimer;
-
-        // Fungsi Logout
-        async function handleLogout(reason = '') {
-            try {
-                await signOut(auth);
-                if (reason) alert(reason);
-                safeNavigate(loginPageUrl);
-            } catch (err) {
-                console.error("Gagal Logout: ", err);
-            }
-        }
-
-        // Reset Inactivity Timer
-        function resetInactivityTimer() {
-            clearTimeout(inactivityTimer);
-            inactivityTimer = setTimeout(() => {
-                handleLogout('Sesi Anda telah berakhir karena tidak ada aktivitas selama 5 menit.');
-            }, INACTIVITY_LIMIT);
-        }
-
-        // Jalankan event listener aktivitas pengguna untuk reset timer
-        function startInactivityTracker() {
-            const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart'];
-            events.forEach(event => {
-                window.addEventListener(event, resetInactivityTimer, true);
-            });
-            resetInactivityTimer();
-        }
-
-        // Cek Status Login Pengguna Realtime
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                // Pengguna belum login, arahkan ke halaman login live
-                safeNavigate(loginPageUrl);
-            } else {
-                // Pengguna terverifikasi login, aktifkan proteksi inactivity timer & muat data
-                startInactivityTracker();
-                loadTransactions();
-            }
-        });
-
-        // Event Tombol Logout
-        document.getElementById('btnLogout').addEventListener('click', () => {
-            if (confirm('Apakah Anda yakin ingin keluar?')) {
-                handleLogout();
-            }
-        });
-
-        // --- MANAJEMEN TRANSAKSI & TABEL ---
-        
-        // Cache lokal data transaksi
-        let transactionsMap = new Map();
-        let currentSnapshotData = [];
-
-        // Auto Fill Tanggal Hari Ini
-        document.getElementById('date').valueAsDate = new Date();
-
-        // Elements
-        const companySelect = document.getElementById('companySelect');
-        const newCompanyGroup = document.getElementById('newCompanyGroup');
-        const newCompanyNameInput = document.getElementById('newCompanyName');
-        const categorySelect = document.getElementById('categorySelect');
-        const newCategoryGroup = document.getElementById('newCategoryGroup');
-        const newCategoryNameInput = document.getElementById('newCategoryName');
-        const amountInput = document.getElementById('amount');
-        const tableFilter = document.getElementById('tableFilter');
-
-        // Event Listener Filter & Urutan Tabel
-        tableFilter.addEventListener('change', () => {
-            renderTableData();
-        });
-
-        // Event Formatting Otomatis Angka Ribuan dengan Titik
-        amountInput.addEventListener('input', (e) => {
-            let val = e.target.value.replace(/\D/g, '');
-            if (val) {
-                e.target.value = parseInt(val, 10).toLocaleString('id-ID');
-            } else {
-                e.target.value = '';
-            }
-        });
-
-        // Toggle Form PT Baru & Re-render Tabel saat pilihan PT Berubah
-        companySelect.addEventListener('change', (e) => {
-            const selectedVal = e.target.value;
-            if (selectedVal === 'NEW_PT') {
-                newCompanyGroup.style.display = 'block';
-                newCompanyNameInput.setAttribute('required', 'true');
-            } else {
-                newCompanyGroup.style.display = 'none';
-                newCompanyNameInput.removeAttribute('required');
-                newCompanyNameInput.value = '';
-            }
-
-            // Panggil render ulang tabel agar memfilter transaksi berdasarkan PT yang dipilih
-            renderTableData();
-        });
-
-        categorySelect.addEventListener('change', (e) => {
-            const selectedVal = e.target.value;
-            if (selectedVal === 'NEW_CATEGORY') {
-                newCategoryGroup.style.display = 'block';
-                newCategoryNameInput.setAttribute('required', 'true');
-            } else {
-                newCategoryGroup.style.display = 'none';
-                newCategoryNameInput.removeAttribute('required');
-                newCategoryNameInput.value = '';
-            }
-        });
-
-        // Alert Notifikasi
-        function showAlert(message, type = 'success') {
-            const alertBox = document.getElementById('alertBox');
-            alertBox.className = `alert alert-${type}`;
-            alertBox.innerText = message;
-            alertBox.style.display = 'block';
-            setTimeout(() => { alertBox.style.display = 'none'; }, 4000);
-        }
-
-        // Format Rupiah
         function formatRupiah(amount) {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                maximumFractionDigits: 0
-            }).format(amount);
+            return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(amount);
         }
 
-        // Format Tanggal
+        function formatNumberInput(value) {
+            const cleaned = String(value).replace(/[^\d]/g, '');
+            if (!cleaned) return '';
+            return Number(cleaned).toLocaleString('id-ID');
+        }
+
         function formatDate(dateObj) {
             if (!dateObj) return '-';
-            let d = dateObj.seconds ? new Date(dateObj.seconds * 1000) : new Date(dateObj);
+            const d = dateObj.seconds ? new Date(dateObj.seconds * 1000) : new Date(dateObj);
             return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' });
         }
 
-        // Helper Konversi Tanggal ke Milidetik
-        function getTimeInMillis(dateObj) {
-            if (!dateObj) return 0;
-            return dateObj.seconds ? dateObj.seconds * 1000 : new Date(dateObj).getTime();
+        function isIncomeTransaction(trx) {
+            const type = String(trx?.type || '').trim().toLowerCase();
+            return ['debit', 'masuk', 'in', 'pemasukan', 'income', 'pendapatan'].includes(type);
         }
 
-        // Helper Cek apakah Transaksi adalah Debit
-        function checkIsDebit(trx) {
-            return trx.type === 'debit' || trx.type === 'masuk' || trx.type === 'in' || trx.type === 'pemasukan';
+        function getVisibleTransactions(transactions) {
+            const companyName = String(activeCompanyFilter || 'ALL').trim();
+            if (!companyName || companyName === 'ALL') return transactions || [];
+            return (transactions || []).filter(trx => String(trx.companyName || '').trim() === companyName);
         }
 
-        // Helper Badge Status
-        function getStatusBadge(status) {
-            const st = (status || 'Selesai').toLowerCase();
-            if (st === 'selesai') return '<span class="badge badge-success"><i class="fa-solid fa-check"></i> Selesai</span>';
-            if (st === 'pending') return '<span class="badge badge-warning"><i class="fa-solid fa-clock"></i> Pending</span>';
-            if (st === 'batal') return '<span class="badge badge-danger"><i class="fa-solid fa-xmark"></i> Batal</span>';
-            return `<span class="badge badge-secondary">${status}</span>`;
-        }
+        function renderTableAndCards(transactions) {
+            const tbody = document.getElementById('transactionTableBody');
+            const mobileList = document.getElementById('transactionMobileList');
+            const visibleTransactions = getVisibleTransactions(transactions);
 
-        // Reset Form ke Mode Tambah Data
-        function resetForm(preserveSelection = false) {
-            const preservedState = preserveSelection ? {
-                company: companySelect.value,
-                category: categorySelect.value,
-                type: document.getElementById('type').value,
-                status: document.getElementById('status').value,
-                paymentMethod: document.getElementById('paymentMethod').value,
-                newCompanyName: newCompanyNameInput.value,
-                newCategoryName: newCategoryNameInput.value
-            } : null;
-
-            document.getElementById('transactionForm').reset();
-            document.getElementById('documentId').value = '';
-            document.getElementById('date').valueAsDate = new Date();
-            document.getElementById('formTitle').innerHTML = '<i class="fa-solid fa-plus-circle"></i> Tambah Transaksi';
-            document.getElementById('btnSubmit').className = 'btn btn-primary';
-            document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-paper-plane"></i> Simpan Transaksi';
-            document.getElementById('btnCancelEdit').style.display = 'none';
-            newCompanyGroup.style.display = 'none';
-            newCompanyNameInput.removeAttribute('required');
-            newCompanyNameInput.value = '';
-            newCategoryGroup.style.display = 'none';
-            newCategoryNameInput.removeAttribute('required');
-            newCategoryNameInput.value = '';
-            categorySelect.value = '';
-
-            if (preserveSelection && preservedState) {
-                const companyOptions = Array.from(companySelect.options).map(option => option.value);
-                const categoryOptions = Array.from(categorySelect.options).map(option => option.value);
-
-                if (preservedState.company && companyOptions.includes(preservedState.company)) {
-                    companySelect.value = preservedState.company;
-                    if (preservedState.company === 'NEW_PT') {
-                        newCompanyGroup.style.display = 'block';
-                        newCompanyNameInput.setAttribute('required', 'true');
-                        newCompanyNameInput.value = preservedState.newCompanyName || '';
-                    }
-                }
-
-                if (preservedState.category && categoryOptions.includes(preservedState.category)) {
-                    categorySelect.value = preservedState.category;
-                    if (preservedState.category === 'NEW_CATEGORY') {
-                        newCategoryGroup.style.display = 'block';
-                        newCategoryNameInput.setAttribute('required', 'true');
-                        newCategoryNameInput.value = preservedState.newCategoryName || '';
-                    }
-                }
-
-                if (preservedState.type) document.getElementById('type').value = preservedState.type;
-                if (preservedState.status) document.getElementById('status').value = preservedState.status;
-                if (preservedState.paymentMethod) document.getElementById('paymentMethod').value = preservedState.paymentMethod;
+            if (!visibleTransactions || visibleTransactions.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="small">Tidak ada data transaksi untuk perusahaan ini.</td></tr>`;
+                mobileList.innerHTML = `<div class="small">Tidak ada data transaksi untuk perusahaan ini.</div>`;
+                return;
             }
 
-            // Render ulang tabel setelah reset form
-            renderTableData();
+            tbody.innerHTML = '';
+            mobileList.innerHTML = '';
+
+            visibleTransactions.forEach(trx => {
+                const isIncome = isIncomeTransaction(trx);
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>#${(trx.id || '').toString().substring(0, 6).toUpperCase()}</td>
+                    <td>${trx.companyName || '-'}</td>
+                    <td>${formatDate(trx.date)}</td>
+                    <td>${trx.description || '-'}</td>
+                    <td>${trx.category || '-'}</td>
+                    <td>${isIncome ? 'Masuk' : 'Keluar'}</td>
+                    <td><strong>${formatRupiah(trx.amount || 0)}</strong></td>
+                    <td>
+                        <button class="editTransactionBtn" data-id="${trx.id}" style="padding:6px 8px; margin-right:6px; border:1px solid #dbeafe; border-radius:8px; background:#eff6ff; cursor:pointer;">Edit</button>
+                        <button class="deleteTransactionBtn" data-id="${trx.id}" style="padding:6px 8px; border:1px solid #fecaca; border-radius:8px; background:#fef2f2; color:#b91c1c; cursor:pointer;">Hapus</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+
+                const card = document.createElement('div');
+                card.className = 'trx-item-card';
+                card.style.border = '1px solid #e2e8f0';
+                card.style.borderRadius = '12px';
+                card.style.padding = '12px';
+                card.style.marginBottom = '8px';
+                card.innerHTML = `
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <strong>${trx.companyName || '-'}</strong>
+                        <span class="small">${formatDate(trx.date)}</span>
+                    </div>
+                    <div style="margin-top:6px;">${trx.description || '-'}</div>
+                    <div style="display:flex;justify-content:space-between;margin-top:8px;align-items:center;">
+                        <span class="small">${trx.category || '-'}</span>
+                        <strong style="color:${isIncome ? 'var(--success, #10b981)' : 'var(--danger, #ef4444)'}">${isIncome ? '+' : ''}${formatRupiah(trx.amount || 0)}</strong>
+                    </div>
+                    <div style="display:flex; gap:8px; margin-top:10px;">
+                        <button class="editTransactionBtn" data-id="${trx.id}" style="flex:1; padding:7px 8px; border:1px solid #dbeafe; border-radius:8px; background:#eff6ff; cursor:pointer;">Edit</button>
+                        <button class="deleteTransactionBtn" data-id="${trx.id}" style="flex:1; padding:7px 8px; border:1px solid #fecaca; border-radius:8px; background:#fef2f2; color:#b91c1c; cursor:pointer;">Hapus</button>
+                    </div>
+                `;
+
+                mobileList.appendChild(card);
+            });
+
+            document.querySelectorAll('.editTransactionBtn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.dataset.id;
+                    const trx = allTransactions.find(item => item.id === id);
+                    if (!trx) return;
+
+                    if (companySelect && companySelect.options.length) {
+                        companySelect.value = trx.companyName || 'ALL';
+                        activeCompanyFilter = trx.companyName || 'ALL';
+                    }
+
+                    form.date.value = trx.date && trx.date.seconds ? new Date(trx.date.seconds * 1000).toISOString().slice(0, 10) : (trx.date ? new Date(trx.date).toISOString().slice(0, 10) : '');
+                    form.description.value = trx.description || '';
+                    form.category.value = trx.category || '';
+                    form.type.value = trx.type || 'debit';
+                    form.amount.value = trx.amount || 0;
+                    form.dataset.editingId = trx.id;
+                    statusEl.innerText = 'Mode edit transaksi aktif. Klik Simpan untuk menyimpan perubahan.';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+
+            document.querySelectorAll('.deleteTransactionBtn').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const id = btn.dataset.id;
+                    if (!id) return;
+                    if (!confirm('Hapus transaksi ini?')) return;
+
+                    try {
+                        await deleteDoc(doc(db, 'transactions', id));
+                        statusEl.innerText = 'Transaksi berhasil dihapus.';
+                    } catch (err) {
+                        console.error('Gagal menghapus transaksi', err);
+                        statusEl.innerText = 'Gagal menghapus transaksi. Cek konsol.';
+                    }
+                });
+            });
         }
 
-        // Tombol Batal Edit
-        document.getElementById('btnCancelEdit').addEventListener('click', resetForm);
+        function resetTransactionForm() {
+            form.reset();
+            form.dataset.editingId = '';
+            if (companySelect) {
+                companySelect.value = activeCompanyFilter || 'ALL';
+            }
+            statusEl.innerText = '';
+        }
 
-        // Submit Form -> Tambah atau Update Data Ke Database
-        document.getElementById('transactionForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btnSubmit = document.getElementById('btnSubmit');
-            const docId = document.getElementById('documentId').value;
-            
-            btnSubmit.disabled = true;
-            btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memproses...';
+        function listenToTransactions() {
+            if (!db) {
+                console.warn('Firebase belum siap, listener transaksi dilewati.');
+                return;
+            }
 
-            try {
-                // Tentukan nama PT dari pilihan dropdown atau input baru
-                let companyName = companySelect.value;
-                if (companyName === 'NEW_PT') {
-                    companyName = newCompanyNameInput.value.trim();
-                }
+            const q = query(collection(db, 'transactions'), orderBy('date', 'desc'));
+            onSnapshot(q, (snapshot) => {
+                const items = [];
+                snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+                allTransactions = items;
+                renderTableAndCards(allTransactions);
+            }, (error) => {
+                console.error('Gagal mengambil data dari Firebase: ', error);
+                const tbody = document.getElementById('transactionTableBody');
+                tbody.innerHTML = `<tr><td colspan="7" class="small">Gagal memuat data.</td></tr>`;
+            });
+        }
 
-                if (!companyName) {
-                    throw new Error("Silakan pilih atau isi Nama PT.");
-                }
+        // --- Companies management ---
+        const companySelect = document.getElementById('companySelect');
+        const manageCompaniesBtn = document.getElementById('manageCompaniesBtn');
+        const companyModal = document.getElementById('companyModal');
+        const closeCompanyModal = document.getElementById('closeCompanyModal');
+        const newCompanyName = document.getElementById('newCompanyName');
+        const addCompanyBtn = document.getElementById('addCompanyBtn');
+        const companiesList = document.getElementById('companiesList');
 
-                const code = document.getElementById('code').value.trim();
-                const type = document.getElementById('type').value;
-                const status = document.getElementById('status').value;
-                
-                // Ambil nilai angka murni dari input bercakram/ber-titik
-                const rawAmount = document.getElementById('amount').value.replace(/\./g, '');
-                const amount = parseFloat(rawAmount) || 0;
+        function populateCompanySelect(items) {
+            const sel = companySelect;
+            const prev = sel.value || activeCompanyFilter || '';
+            sel.innerHTML = '<option value="ALL">-- Semua PT / Perusahaan --</option>';
+            items.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.name || '';
+                opt.textContent = c.name || '';
+                sel.appendChild(opt);
+            });
 
-                const paymentMethod = document.getElementById('paymentMethod').value;
-                const senderAccount = document.getElementById('senderAccount').value;
-                const recipientAccount = document.getElementById('recipientAccount').value;
-                let category = categorySelect.value;
-                if (category === 'NEW_CATEGORY') {
-                    category = newCategoryNameInput.value.trim();
-                }
-                const dateVal = document.getElementById('date').value;
-                const description = document.getElementById('description').value;
+            if (prev && prev !== 'ALL' && items.some(c => (c.name || '') === prev)) {
+                sel.value = prev;
+                activeCompanyFilter = prev;
+            } else {
+                sel.value = 'ALL';
+                activeCompanyFilter = 'ALL';
+            }
+        }
 
-                // Konversi tanggal string ke Timestamp Database
-                const transactionDate = Timestamp.fromDate(new Date(dateVal));
+        function renderCompanies(items) {
+            companiesList.innerHTML = '';
+            if (!items || items.length === 0) {
+                companiesList.innerHTML = '<tr><td colspan="2" class="small">Belum ada perusahaan.</td></tr>';
+                populateCompanySelect([]);
+                return;
+            }
 
-                const payload = {
-                    companyName: companyName,
-                    code: code,
-                    type: type,
-                    status: status,
-                    amount: amount,
-                    paymentMethod: paymentMethod,
-                    senderAccount: senderAccount,
-                    recipientAccount: recipientAccount,
-                    category: category,
-                    date: transactionDate,
-                    description: description
-                };
+            items.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="padding:6px 8px;">${c.name || ''}</td>
+                    <td style="padding:6px 8px; text-align:right;">
+                        <button data-id="${c.id}" data-name="${c.name}" class="editCompanyBtn" style="margin-right:8px; padding:6px 8px;">Edit</button>
+                        <button data-id="${c.id}" class="deleteCompanyBtn" style="padding:6px 8px;">Hapus</button>
+                    </td>
+                `;
+                companiesList.appendChild(tr);
+            });
 
-                if (docId) {
-                    // MODE EDIT: Update Dokumen
-                    await updateDoc(doc(db, "transactions", docId), payload);
-                    showAlert('Data transaksi berhasil diperbarui!');
-                } else {
-                    // MODE TAMBAH: Tambah Dokumen Baru
-                    payload.createdAt = Timestamp.now();
-                    await addDoc(collection(db, "transactions"), payload);
-                    showAlert('Data transaksi berhasil disimpan!');
-                }
+            populateCompanySelect(items);
 
-                resetForm(true);
-            } catch (error) {
-                console.error("Gagal menyimpan data: ", error);
-                showAlert('Gagal menyimpan data: ' + error.message, 'danger');
-            } finally {
-                btnSubmit.disabled = false;
+            // Attach handlers
+            document.querySelectorAll('.deleteCompanyBtn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    if (!confirm('Hapus perusahaan ini?')) return;
+                    try {
+                        await deleteDoc(doc(db, 'companies', id));
+                    } catch (err) {
+                        console.error('Gagal menghapus perusahaan', err);
+                        alert('Gagal menghapus perusahaan. Cek konsol.');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.editCompanyBtn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    const oldName = e.currentTarget.dataset.name || '';
+                    const newNameVal = prompt('Edit nama perusahaan', oldName);
+                    if (!newNameVal || newNameVal.trim() === '' || newNameVal.trim() === oldName) return;
+                    try {
+                        await updateDoc(doc(db, 'companies', id), { name: newNameVal.trim() });
+                    } catch (err) {
+                        console.error('Gagal mengedit perusahaan', err);
+                        alert('Gagal mengedit perusahaan. Cek konsol.');
+                    }
+                });
+            });
+        }
+
+        function listenToCompanies() {
+            if (!db) {
+                console.warn('Firebase belum siap, listener perusahaan dilewati.');
+                return;
+            }
+
+            const q = query(collection(db, 'companies'), orderBy('name', 'asc'));
+            onSnapshot(q, (snapshot) => {
+                const items = [];
+                snapshot.forEach(s => items.push({ id: s.id, ...s.data() }));
+                renderCompanies(items);
+            }, (err) => {
+                console.error('Gagal memuat companies:', err);
+                companiesList.innerHTML = '<tr><td colspan="2" class="small">Gagal memuat perusahaan.</td></tr>';
+            });
+        }
+
+        const amountInput = document.getElementById('amount');
+
+        amountInput.addEventListener('input', (event) => {
+            const raw = event.target.value;
+            const formatted = formatNumberInput(raw);
+            if (formatted !== raw) {
+                event.target.value = formatted;
             }
         });
 
-        // Update Pilihan Opsi PT di Dropdown Form
-        function updateCompanyDropdowns(companies) {
-            const currentSelectedInForm = companySelect.value;
+        companySelect.addEventListener('change', (event) => {
+            activeCompanyFilter = event.target.value || 'ALL';
+            renderTableAndCards(allTransactions);
+        });
 
-            // Reset Options
-            companySelect.innerHTML = '<option value="" disabled selected>-- Pilih PT / Perusahaan --</option>';
+        manageCompaniesBtn.addEventListener('click', () => {
+            companyModal.style.display = 'flex';
+        });
+        closeCompanyModal.addEventListener('click', () => { companyModal.style.display = 'none'; });
 
-            companies.forEach(company => {
-                const opt = document.createElement('option');
-                opt.value = company;
-                opt.textContent = company;
-                companySelect.appendChild(opt);
-            });
-
-            // Opsi Tambah PT Baru
-            const newOpt = document.createElement('option');
-            newOpt.value = 'NEW_PT';
-            newOpt.textContent = '+ Tambah PT Baru...';
-            companySelect.appendChild(newOpt);
-
-            // Restore selection
-            if (companies.includes(currentSelectedInForm) || currentSelectedInForm === 'NEW_PT') {
-                companySelect.value = currentSelectedInForm;
+        addCompanyBtn.addEventListener('click', async () => {
+            const name = newCompanyName.value.trim();
+            if (!name) return alert('Masukkan nama perusahaan');
+            try {
+                await addDoc(collection(db, 'companies'), { name, createdAt: serverTimestamp() });
+                newCompanyName.value = '';
+            } catch (err) {
+                console.error('Gagal menambah perusahaan', err);
+                alert('Gagal menambah perusahaan. Cek konsol.');
             }
+        });
+
+
+        let realtimeStarted = false;
+
+        function startRealtimeListeners() {
+            if (!db || realtimeStarted) return;
+            realtimeStarted = true;
+            listenToTransactions();
+            listenToCompanies();
+            statusEl.innerText = '';
         }
 
-        function updateCategoryDropdowns(categories) {
-            const currentSelectedInForm = categorySelect.value;
-            const defaultCategories = [
-                'Saldo Awal',
-                'Hutang Usaha',
-                'Utang Bank',
-                'Kas Bank',
-                'Piutang Usaha',
-                'Perlengkapan',
-                'Peralatan',
-                'Modal Di Setor',
-                'Prive',
-                'Laba Rugi',
-                'Laba Untung'
-            ];
-            const uniqueCategories = [...new Set([...defaultCategories, ...categories])];
+        startRealtimeListeners();
 
-            categorySelect.innerHTML = '<option value="" disabled selected>-- Pilih Kategori --</option>';
-
-            uniqueCategories.forEach(category => {
-                const opt = document.createElement('option');
-                opt.value = category;
-                opt.textContent = category;
-                categorySelect.appendChild(opt);
-            });
-
-            const newOpt = document.createElement('option');
-            newOpt.value = 'NEW_CATEGORY';
-            newOpt.textContent = '+ Tambah Kategori Baru...';
-            categorySelect.appendChild(newOpt);
-
-            if (uniqueCategories.includes(currentSelectedInForm) || currentSelectedInForm === 'NEW_CATEGORY') {
-                categorySelect.value = currentSelectedInForm;
-            }
-        }
-
-        // Render Data Tabel (Disaring Berdasarkan Pilihan PT & Filter Pengurutan)
-        function renderTableData() {
-            const tbody = document.getElementById('transactionTableBody');
-
-            if (currentSnapshotData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Belum ada data di database.</td></tr>`;
-                return;
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const selectedCompany = document.getElementById('companySelect').value.trim();
+            if (!selectedCompany || selectedCompany === 'ALL') {
+                return alert('Pilih perusahaan terlebih dahulu.');
             }
 
-            const selectedCompany = companySelect.value;
-            const filterValue = tableFilter.value;
+            const cleanAmount = Number(String(form.amount.value).replace(/\./g, '').replace(/[^\d]/g, '')) || 0;
+            const data = {
+                companyName: selectedCompany,
+                date: new Date(form.date.value),
+                description: form.description.value.trim(),
+                category: form.category.value.trim(),
+                type: form.type.value,
+                amount: cleanAmount,
+                status: 'Selesai',
+                updatedAt: serverTimestamp()
+            };
 
-            // 1. Filter data berdasarkan PT yang dipilih
-            let filteredData = [...currentSnapshotData];
-            if (selectedCompany && selectedCompany !== 'NEW_PT') {
-                filteredData = filteredData.filter(trx => trx.companyName === selectedCompany);
-            }
-
-            // 2. Filter berdasarkan Jenis (Debit / Kredit) jika dipilih
-            if (filterValue === 'debit_only') {
-                filteredData = filteredData.filter(trx => checkIsDebit(trx));
-            } else if (filterValue === 'kredit_only') {
-                filteredData = filteredData.filter(trx => !checkIsDebit(trx));
-            }
-
-            // 3. Sorting Data
-            filteredData.sort((a, b) => {
-                const timeA = getTimeInMillis(a.date);
-                const timeB = getTimeInMillis(b.date);
-                const amountA = a.amount || 0;
-                const amountB = b.amount || 0;
-
-                switch (filterValue) {
-                    case 'oldest':
-                        return timeA - timeB;
-                    case 'amount_desc':
-                        return amountB - amountA;
-                    case 'amount_asc':
-                        return amountA - amountB;
-                    case 'newest':
-                    case 'debit_only':
-                    case 'kredit_only':
-                    default:
-                        return timeB - timeA;
+            try {
+                const editingId = form.dataset.editingId;
+                if (editingId) {
+                    await updateDoc(doc(db, 'transactions', editingId), {
+                        ...data,
+                        createdAt: allTransactions.find(item => item.id === editingId)?.createdAt || serverTimestamp()
+                    });
+                    statusEl.innerText = 'Transaksi berhasil diubah.';
+                } else {
+                    await addDoc(collection(db, 'transactions'), {
+                        ...data,
+                        createdAt: serverTimestamp()
+                    });
+                    statusEl.innerText = 'Transaksi berhasil disimpan.';
                 }
-            });
 
-            if (filteredData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="empty-state">Tidak ada transaksi ditemukan untuk kriteria ini.</td></tr>`;
-                return;
+                resetTransactionForm();
+            } catch (err) {
+                console.error(err);
+                statusEl.innerText = 'Gagal menyimpan transaksi. Periksa konsol.';
             }
+        });
 
-            // Grouping transaksi berdasarkan PT
-            const groupedTransactions = {};
-            filteredData.forEach((trx) => {
-                const company = (trx.companyName && trx.companyName.trim() !== '') ? trx.companyName.trim() : 'Tanpa Nama PT';
-
-                if (!groupedTransactions[company]) {
-                    groupedTransactions[company] = [];
-                }
-                groupedTransactions[company].push(trx);
-            });
-
-            const companyKeys = Object.keys(groupedTransactions).sort();
-
-            tbody.innerHTML = '';
-
-            // Render Tabel berdasarkan Kelompok PT
-            companyKeys.forEach((companyName) => {
-                // Header Perusahaan
-                const companyHeaderRow = document.createElement('tr');
-                companyHeaderRow.innerHTML = `
-                    <td colspan="7" style="background-color: #f1f5f9; font-weight: 700; color: #1e293b; padding: 10px 14px;">
-                        <i class="fa-solid fa-building" style="margin-right: 8px; color: var(--accent);"></i>${companyName}
-                    </td>
-                `;
-                tbody.appendChild(companyHeaderRow);
-
-                // Baris Transaksi
-                groupedTransactions[companyName].forEach((trx) => {
-                    const isDebit = checkIsDebit(trx);
-
-                    // Menyiapkan rincian informasi opsional secara vertikal (sejajar kebawah)
-                    const sender = trx.senderAccount ? `<div class="table-subtext"><strong>Pengirim:</strong> ${trx.senderAccount}</div>` : '';
-                    const recipient = trx.recipientAccount ? `<div class="table-subtext"><strong>Penerima:</strong> ${trx.recipientAccount}</div>` : '';
-                    const accountsInfo = `${sender}${recipient}`;
-
-                    const categoryBadge = trx.category ? `<span style="display:inline-block; margin-top:2px; font-size:0.7rem; background:#e2e8f0; color:#334155; padding:1px 6px; border-radius:4px;"><i class="fa-solid fa-tag"></i> ${trx.category}</span>` : '';
-                    
-                    const transactionCode = (trx.code && String(trx.code).trim()) ? String(trx.code).trim() : '';
-                    const transactionCodeCell = transactionCode
-                        ? `<strong>#${transactionCode}</strong>`
-                        : '<span style="color: var(--text-muted);">-</span>';
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>
-                            ${transactionCodeCell}
-                            <div class="table-subtext"><i class="fa-regular fa-calendar"></i> ${formatDate(trx.date)}</div>
-                        </td>
-                        <td style="white-space: normal; min-width: 200px;">
-                            <div>${trx.description || '-'}</div>
-                            ${categoryBadge ? `<div>${categoryBadge}</div>` : ''}
-                            ${accountsInfo}
-                        </td>
-                        <td><span class="badge ${isDebit ? 'badge-success' : 'badge-danger'}">${isDebit ? 'Debit' : 'Kredit'}</span></td>
-                        <td>${getStatusBadge(trx.status)}</td>
-                        <td><small style="font-weight: 500;">${trx.paymentMethod || '-'}</small></td>
-                        <td><strong style="color: ${isDebit ? 'var(--success)' : 'var(--danger)'}">${formatRupiah(trx.amount || 0)}</strong></td>
-                        <td>
-                            <div class="action-btns">
-                                <button class="btn btn-warning btn-edit" data-id="${trx.id}" style="padding: 4px 8px; font-size: 0.75rem;" title="Edit">
-                                    <i class="fa-solid fa-pen-to-square"></i>
-                                </button>
-                                <button class="btn btn-danger btn-delete" data-id="${trx.id}" style="padding: 4px 8px; font-size: 0.75rem;" title="Hapus">
-                                    <i class="fa-solid fa-trash"></i>
-                                </button>
-                            </div>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-            });
-
-            // Event Listener Edit Data
-            document.querySelectorAll('.btn-edit').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.currentTarget.getAttribute('data-id');
-                    const trx = transactionsMap.get(id);
-
-                    if (trx) {
-                        document.getElementById('documentId').value = id;
-                        
-                        const companyVal = trx.companyName || '';
-                        const companyOptions = Array.from(companySelect.options).map(o => o.value);
-                        if (companyOptions.includes(companyVal)) {
-                            companySelect.value = companyVal;
-                            newCompanyGroup.style.display = 'none';
-                        } else {
-                            companySelect.value = 'NEW_PT';
-                            newCompanyGroup.style.display = 'block';
-                            newCompanyNameInput.value = companyVal;
-                        }
-
-                        document.getElementById('code').value = trx.code || '';
-                        
-                        // Normalisasi Jenis Transaksi ke Debit / Kredit
-                        const isDebitType = checkIsDebit(trx);
-                        document.getElementById('type').value = isDebitType ? 'debit' : 'kredit';
-
-                        document.getElementById('status').value = trx.status || 'Selesai';
-                        
-                        // Format Angka ke Ribuan Ber-titik saat dimasukkan ke input edit
-                        const amtVal = trx.amount || 0;
-                        document.getElementById('amount').value = amtVal ? parseInt(amtVal, 10).toLocaleString('id-ID') : '';
-
-                        document.getElementById('paymentMethod').value = trx.paymentMethod || '';
-                        document.getElementById('senderAccount').value = trx.senderAccount || '';
-                        document.getElementById('recipientAccount').value = trx.recipientAccount || '';
-                        const categoryValue = trx.category || '';
-                        const categoryOptions = Array.from(categorySelect.options).map(o => o.value);
-                        if (categoryOptions.includes(categoryValue)) {
-                            categorySelect.value = categoryValue;
-                            newCategoryGroup.style.display = 'none';
-                        } else if (categoryValue) {
-                            categorySelect.value = 'NEW_CATEGORY';
-                            newCategoryGroup.style.display = 'block';
-                            newCategoryNameInput.value = categoryValue;
-                        } else {
-                            categorySelect.value = '';
-                            newCategoryGroup.style.display = 'none';
-                            newCategoryNameInput.value = '';
-                        }
-                        document.getElementById('description').value = trx.description || '';
-
-                        if (trx.date) {
-                            const dateObj = trx.date.seconds ? new Date(trx.date.seconds * 1000) : new Date(trx.date);
-                            document.getElementById('date').value = dateObj.toISOString().split('T')[0];
-                        }
-
-                        document.getElementById('formTitle').innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Edit Transaksi';
-                        document.getElementById('btnSubmit').className = 'btn btn-warning';
-                        document.getElementById('btnSubmit').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Update Transaksi';
-                        document.getElementById('btnCancelEdit').style.display = 'inline-flex';
-
-                        // Render ulang tabel untuk mencocokkan filter PT transaksi yang di-edit
-                        renderTableData();
-
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }
-                });
-            });
-
-            // Event Listener Hapus Data
-            document.querySelectorAll('.btn-delete').forEach(btn => {
-                btn.addEventListener('click', async (e) => {
-                    const docId = e.currentTarget.getAttribute('data-id');
-                    if (confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
-                        try {
-                            await deleteDoc(doc(db, "transactions", docId));
-                            showAlert('Data berhasil dihapus!');
-                            if (document.getElementById('documentId').value === docId) {
-                                resetForm();
-                            }
-                        } catch (err) {
-                            showAlert('Gagal menghapus data: ' + err.message, 'danger');
-                        }
-                    }
-                });
-            });
-        }
-
-        // Read Realtime Data Transaksi
-        function loadTransactions() {
-            const q = query(collection(db, "transactions"), orderBy("date", "desc"));
-
-            onSnapshot(q, (snapshot) => {
-                transactionsMap.clear();
-                currentSnapshotData = [];
-                const companiesSet = new Set();
-                const categoriesSet = new Set();
-
-                snapshot.forEach((docSnap) => {
-                    const trx = { id: docSnap.id, ...docSnap.data() };
-                    transactionsMap.set(docSnap.id, trx);
-                    currentSnapshotData.push(trx);
-
-                    if (trx.companyName && trx.companyName.trim() !== '') {
-                        companiesSet.add(trx.companyName.trim());
-                    }
-                    if (trx.category && trx.category.trim() !== '') {
-                        categoriesSet.add(trx.category.trim());
-                    }
-                });
-
-                // Update opsi-opsi PT di dropdown form
-                updateCompanyDropdowns(Array.from(companiesSet).sort());
-                updateCategoryDropdowns(Array.from(categoriesSet).sort());
-
-                // Render tabel
-                renderTableData();
-            });
-        }
+        document.getElementById('resetBtn').addEventListener('click', () => resetTransactionForm());
     </script>
 </body>
 </html>
