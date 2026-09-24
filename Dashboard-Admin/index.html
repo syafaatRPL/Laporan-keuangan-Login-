@@ -306,8 +306,8 @@
             return 0;
         }
 
-        function sortTransactionsByNewestFirst(transactions) {
-            return [...(transactions || [])].sort((a, b) => getTransactionCreatedAtValue(b) - getTransactionCreatedAtValue(a));
+        function sortTransactionsByOldestFirst(transactions) {
+            return [...(transactions || [])].sort((a, b) => getTransactionCreatedAtValue(a) - getTransactionCreatedAtValue(b));
         }
 
         function getVisibleTransactions(transactions) {
@@ -319,7 +319,7 @@
         function renderTableAndCards(transactions) {
             const tbody = document.getElementById('transactionTableBody');
             const mobileList = document.getElementById('transactionMobileList');
-            const visibleTransactions = sortTransactionsByNewestFirst(getVisibleTransactions(transactions));
+            const visibleTransactions = sortTransactionsByOldestFirst(getVisibleTransactions(transactions));
 
             if (!visibleTransactions || visibleTransactions.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="small">Tidak ada data transaksi untuk perusahaan ini.</td></tr>`;
@@ -431,11 +431,11 @@
                 return;
             }
 
-            const q = query(collection(db, 'transactions'), orderBy('createdAt', 'desc'));
+            const q = query(collection(db, 'transactions'), orderBy('createdAt', 'asc'));
             onSnapshot(q, (snapshot) => {
                 const items = [];
                 snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-                allTransactions = sortTransactionsByNewestFirst(items);
+                allTransactions = sortTransactionsByOldestFirst(items);
                 renderTableAndCards(allTransactions);
             }, (error) => {
                 console.error('Gagal mengambil data dari Firebase: ', error);
