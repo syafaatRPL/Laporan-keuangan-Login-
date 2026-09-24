@@ -164,16 +164,17 @@
                             <option value="debit">Pemasukan (debit)</option>
                             <option value="kredit">Pengeluaran (kredit)</option>
                         </select>
-                    </div>
+                    </div> 
                     <div class="field">
                         <label for="amount">Jumlah (IDR)</label>
                         <input id="amount" name="amount" type="text" inputmode="numeric" min="0" required placeholder="Contoh: 1.000">
                     </div>
                 </div>
 
-                <div style="display:flex; gap:10px; margin-top:12px;">
+                <div style="display:flex; gap:10px; margin-top:12px; flex-wrap:wrap;">
                     <button type="submit" class="btn">Simpan Transaksi</button>
                     <button type="button" id="resetBtn" style="background:#f1f5f9; color:#0f172a; border-radius:10px; padding:10px 14px; border:1px solid #e2e8f0;">Reset</button>
+                    <button type="button" id="resetAllDataBtn" style="background:#ef4444; color:#fff; border-radius:10px; padding:10px 14px; border:1px solid #ef4444; cursor:pointer; font-weight:700;">Reset Semua Data</button>
                 </div>
             </form>
         </section>
@@ -271,7 +272,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDun1SSeSjVe8ztFl8P_TzBXhfUYk1K7FM",
@@ -679,6 +680,46 @@
             });
         }
 
+        const resetAllDataBtn = document.getElementById('resetAllDataBtn');
+
+        async function deleteAllDocumentsInCollection(collectionName) {
+            if (!db) return;
+
+            const snapshot = await getDocs(collection(db, collectionName));
+            const deletes = snapshot.docs.map(docSnap => deleteDoc(doc(db, collectionName, docSnap.id)));
+            await Promise.all(deletes);
+        }
+
+        async function resetAllData() {
+            if (!db) {
+                alert('Firebase belum siap.');
+                return;
+            }
+
+            const confirmed = confirm('Reset semua data transaksi, perusahaan, dan kategori? Tindakan ini tidak bisa dibatalkan.');
+            if (!confirmed) return;
+
+            try {
+                await deleteAllDocumentsInCollection('transactions');
+                await deleteAllDocumentsInCollection('companies');
+                await deleteAllDocumentsInCollection('categories');
+
+                form.reset();
+                form.dataset.editingId = '';
+                if (document.getElementById('companySelect')) {
+                    document.getElementById('companySelect').value = 'ALL';
+                    activeCompanyFilter = 'ALL';
+                }
+                if (categoryInput) categoryInput.value = '';
+                if (newCompanyName) newCompanyName.value = '';
+                if (newCategoryName) newCategoryName.value = '';
+                statusEl.innerText = 'Semua data berhasil di-reset.';
+            } catch (err) {
+                console.error('Gagal reset semua data:', err);
+                statusEl.innerText = 'Gagal reset semua data. Periksa konsol.';
+            }
+        }
+
         const amountInput = document.getElementById('amount');
 
         amountInput.addEventListener('input', (event) => {
@@ -789,6 +830,7 @@
         });
 
         document.getElementById('resetBtn').addEventListener('click', () => resetTransactionForm());
+        resetAllDataBtn.addEventListener('click', resetAllData);
     </script>
 </body>
 </html>
