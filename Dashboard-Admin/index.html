@@ -124,8 +124,8 @@
             <form id="transactionForm">
                 <div class="form-row">
                     <div class="field">
-                        <label for="transactionId">ID Transaksi</label>
-                        <input id="transactionId" name="transactionId" placeholder="Masukkan ID transaksi (opsional)">
+                        <label for="transactionId">Kode Transaksi</label>
+                        <input id="transactionId" name="transactionId" placeholder="Masukkan Kode transaksi (opsional)">
                     </div>
                 </div>
                 <div class="form-row">
@@ -149,7 +149,11 @@
                     </div>
                     <div class="field">
                         <label for="category">Kategori</label>
-                        <input id="category" name="category">
+                        <div style="display:flex; gap:8px; align-items:center;">
+                            <input id="category" name="category" list="categoryOptions" placeholder="Pilih atau ketik kategori" style="flex:1;">
+                            <button type="button" id="manageCategoriesBtn" style="padding:8px 10px; border-radius:8px; border:1px solid #e2e8f0; background:#fff; cursor:pointer;">Kelola</button>
+                        </div>
+                        <datalist id="categoryOptions"></datalist>
                     </div>
                 </div>
 
@@ -234,6 +238,35 @@
                 </div>
             </div>
         </div>
+
+        <!-- Modal Kelola Kategori -->
+        <div id="categoryModal" style="display:none; position:fixed; inset:0; align-items:center; justify-content:center; background:rgba(15,23,42,0.6); z-index:1201;">
+            <div style="width:min(720px,96%); background:#fff; border-radius:12px; padding:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <h3>Kelola Kategori</h3>
+                    <button id="closeCategoryModal" style="background:#f1f5f9;border:1px solid #e2e8f0;padding:8px 10px;border-radius:8px;">Tutup</button>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-bottom:12px;">
+                    <input id="newCategoryName" placeholder="Nama kategori baru" style="flex:1; padding:8px 10px; border:1px solid #e2e8f0; border-radius:8px;">
+                    <button id="addCategoryBtn" class="btn">Tambah</button>
+                </div>
+
+                <div style="max-height:300px; overflow:auto; border-top:1px solid #eaeef6; padding-top:8px;">
+                    <table style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left; padding:8px 6px;">Nama</th>
+                                <th style="text-align:right; padding:8px 6px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categoriesList">
+                            <tr><td colspan="2" class="small">Memuat...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </main>
 
     <script type="module">
@@ -255,6 +288,7 @@
         let app = null;
         let db = null;
         let allTransactions = [];
+        let allCategories = [];
         let activeCompanyFilter = 'ALL';
 
         try {
@@ -453,6 +487,14 @@
         const addCompanyBtn = document.getElementById('addCompanyBtn');
         const companiesList = document.getElementById('companiesList');
 
+        const categoryInput = document.getElementById('category');
+        const manageCategoriesBtn = document.getElementById('manageCategoriesBtn');
+        const categoryModal = document.getElementById('categoryModal');
+        const closeCategoryModal = document.getElementById('closeCategoryModal');
+        const newCategoryName = document.getElementById('newCategoryName');
+        const addCategoryBtn = document.getElementById('addCategoryBtn');
+        const categoriesList = document.getElementById('categoriesList');
+
         function populateCompanySelect(items) {
             const sel = companySelect;
             const prev = sel.value || activeCompanyFilter || '';
@@ -542,6 +584,101 @@
             });
         }
 
+        function renderCategoryOptions(items) {
+            const datalist = document.getElementById('categoryOptions');
+            if (!datalist) return;
+
+            datalist.innerHTML = '';
+            const normalized = items || [];
+            normalized.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.name || '';
+                datalist.appendChild(option);
+            });
+        }
+
+        function renderCategories(items) {
+            const list = document.getElementById('categoriesList');
+            if (!list) return;
+
+            allCategories = items || [];
+            list.innerHTML = '';
+
+            if (!allCategories.length) {
+                list.innerHTML = '<tr><td colspan="2" class="small">Belum ada kategori.</td></tr>';
+                renderCategoryOptions([]);
+                return;
+            }
+
+            allCategories.forEach(category => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="padding:6px 8px;">${category.name || ''}</td>
+                    <td style="padding:6px 8px; text-align:right;">
+                        <button data-id="${category.id}" data-name="${category.name || ''}" class="editCategoryBtn" style="margin-right:8px; padding:6px 8px;">Edit</button>
+                        <button data-id="${category.id}" class="deleteCategoryBtn" style="padding:6px 8px;">Hapus</button>
+                    </td>
+                `;
+                list.appendChild(tr);
+            });
+
+            renderCategoryOptions(allCategories);
+
+            document.querySelectorAll('.deleteCategoryBtn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    if (!confirm('Hapus kategori ini?')) return;
+                    try {
+                        await deleteDoc(doc(db, 'categories', id));
+                    } catch (err) {
+                        console.error('Gagal menghapus kategori', err);
+                        alert('Gagal menghapus kategori. Cek konsol.');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.editCategoryBtn').forEach(btn => {
+                btn.addEventListener('click', async (e) => {
+                    const id = e.currentTarget.dataset.id;
+                    const oldName = e.currentTarget.dataset.name || '';
+                    const newNameVal = prompt('Edit nama kategori', oldName);
+                    if (!newNameVal || newNameVal.trim() === '' || newNameVal.trim() === oldName) return;
+                    try {
+                        await updateDoc(doc(db, 'categories', id), { name: newNameVal.trim() });
+                    } catch (err) {
+                        console.error('Gagal mengedit kategori', err);
+                        alert('Gagal mengedit kategori. Cek konsol.');
+                    }
+                });
+            });
+        }
+
+        function seedDefaultCategoriesIfNeeded(items) {
+            if (!db || !Array.isArray(items) || items.length > 0) return;
+
+            const defaults = ['Peralatan', 'Perlengkapan', 'Hutang Usaha', 'Piutang Usaha', 'Kas', 'Modal', 'Sewa', 'Beban', 'Pendapatan', 'Opsi', 'Kategori lainnya'];
+            Promise.all(defaults.map(name => addDoc(collection(db, 'categories'), { name, createdAt: serverTimestamp() })))
+                .catch(err => console.error('Gagal membuat kategori default:', err));
+        }
+
+        function listenToCategories() {
+            if (!db) {
+                console.warn('Firebase belum siap, listener kategori dilewati.');
+                return;
+            }
+
+            const q = query(collection(db, 'categories'), orderBy('name', 'asc'));
+            onSnapshot(q, (snapshot) => {
+                const items = [];
+                snapshot.forEach(s => items.push({ id: s.id, ...s.data() }));
+                renderCategories(items);
+                seedDefaultCategoriesIfNeeded(items);
+            }, (err) => {
+                console.error('Gagal memuat kategori:', err);
+                categoriesList.innerHTML = '<tr><td colspan="2" class="small">Gagal memuat kategori.</td></tr>';
+            });
+        }
+
         const amountInput = document.getElementById('amount');
 
         amountInput.addEventListener('input', (event) => {
@@ -574,6 +711,26 @@
             }
         });
 
+        manageCategoriesBtn.addEventListener('click', () => {
+            categoryModal.style.display = 'flex';
+        });
+        closeCategoryModal.addEventListener('click', () => { categoryModal.style.display = 'none'; });
+
+        addCategoryBtn.addEventListener('click', async () => {
+            const name = newCategoryName.value.trim();
+            if (!name) return alert('Masukkan nama kategori');
+
+            const exists = allCategories.some(item => String(item.name || '').trim().toLowerCase() === name.toLowerCase());
+            if (exists) return alert('Kategori sudah ada.');
+
+            try {
+                await addDoc(collection(db, 'categories'), { name, createdAt: serverTimestamp() });
+                newCategoryName.value = '';
+            } catch (err) {
+                console.error('Gagal menambah kategori', err);
+                alert('Gagal menambah kategori. Cek konsol.');
+            }
+        });
 
         let realtimeStarted = false;
 
@@ -582,6 +739,7 @@
             realtimeStarted = true;
             listenToTransactions();
             listenToCompanies();
+            listenToCategories();
             statusEl.innerText = '';
         }
 
