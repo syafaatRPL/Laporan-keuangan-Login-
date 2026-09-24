@@ -288,6 +288,28 @@
             return ['debit', 'masuk', 'in', 'pemasukan', 'income', 'pendapatan'].includes(type);
         }
 
+        function getTransactionCreatedAtValue(trx) {
+            if (!trx) return 0;
+
+            if (trx.createdAt) {
+                const createdDate = trx.createdAt.seconds ? new Date(trx.createdAt.seconds * 1000) : new Date(trx.createdAt);
+                const timestamp = Number(createdDate);
+                if (!Number.isNaN(timestamp)) return timestamp;
+            }
+
+            if (trx.date) {
+                const rawDate = trx.date.seconds ? new Date(trx.date.seconds * 1000) : new Date(trx.date);
+                const timestamp = Number(rawDate);
+                if (!Number.isNaN(timestamp)) return timestamp;
+            }
+
+            return 0;
+        }
+
+        function sortTransactionsByNewestFirst(transactions) {
+            return [...(transactions || [])].sort((a, b) => getTransactionCreatedAtValue(b) - getTransactionCreatedAtValue(a));
+        }
+
         function getVisibleTransactions(transactions) {
             const companyName = String(activeCompanyFilter || 'ALL').trim();
             if (!companyName || companyName === 'ALL') return transactions || [];
@@ -297,7 +319,7 @@
         function renderTableAndCards(transactions) {
             const tbody = document.getElementById('transactionTableBody');
             const mobileList = document.getElementById('transactionMobileList');
-            const visibleTransactions = getVisibleTransactions(transactions);
+            const visibleTransactions = sortTransactionsByNewestFirst(getVisibleTransactions(transactions));
 
             if (!visibleTransactions || visibleTransactions.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="7" class="small">Tidak ada data transaksi untuk perusahaan ini.</td></tr>`;
@@ -409,11 +431,11 @@
                 return;
             }
 
-            const q = query(collection(db, 'transactions'), orderBy('date', 'desc'));
+            const q = query(collection(db, 'transactions'), orderBy('createdAt', 'desc'));
             onSnapshot(q, (snapshot) => {
                 const items = [];
                 snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-                allTransactions = items;
+                allTransactions = sortTransactionsByNewestFirst(items);
                 renderTableAndCards(allTransactions);
             }, (error) => {
                 console.error('Gagal mengambil data dari Firebase: ', error);
